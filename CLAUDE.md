@@ -100,6 +100,10 @@ npm run lint
 - Use CSS variables (--font-pixel, --font-typewriter) for theme-specific fonts
 - Ensure no `font-mono` class conflicts in layout.tsx
 - CSS body selectors must not duplicate (use theme-specific selectors)
+- **IMPORTANT**: Font paths in `next/font/local` are relative to the file location
+  - From `app/layout.tsx`, use `../public/fonts/filename.ttf` 
+  - Do NOT use `./fonts/` as this looks for fonts in the app directory
+  - The original paths `../public/fonts/` are correct and should not be "simplified"
 
 ### Performance Notes
 - WOFF2 format preferred for modern browsers (smaller file size)
