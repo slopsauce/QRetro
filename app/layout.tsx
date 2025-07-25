@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { VT323 } from "next/font/google";
+import { Source_Code_Pro } from "next/font/google";
 import { ThemeProvider } from "@/components/providers";
 import "./globals.css";
 
-const vt323 = VT323({
-  weight: "400",
+const sourceCodePro = Source_Code_Pro({
+  weight: ["400", "700"],
   subsets: ["latin"],
-  variable: "--font-vt323",
+  variable: "--font-source-code-pro",
 });
 
 export const metadata: Metadata = {
@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${vt323.variable} font-mono antialiased`}
+        className={`${sourceCodePro.variable} font-mono antialiased`}
       >
         <ThemeProvider
           attribute="class"

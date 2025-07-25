@@ -22,7 +22,7 @@ export function QROptionsPanel({ options, onChange }: QROptionsProps) {
   };
 
   return (
-    <RetroFrame title="QR OPTIONS">
+    <RetroFrame>
       <div className="space-y-4">
         {/* Error Correction Level */}
         <div>

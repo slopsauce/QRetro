@@ -23,7 +23,7 @@ export function SharePageClient() {
             <p className="text-muted">SHARED QR CODE</p>
           </div>
           
-          <RetroFrame title="ERROR">
+          <RetroFrame>
             <div className="text-center py-20">
               <div className="text-accent mb-4">INVALID SHARE LINK</div>
               <Link 
@@ -51,7 +51,7 @@ export function SharePageClient() {
           <p className="text-muted">SHARED QR CODE - {type.toUpperCase()}</p>
         </div>
         
-        <RetroFrame title="SHARED QR CODE">
+        <RetroFrame>
           <div className="text-center">
             <ShareQRDisplay qrData={decodedData} />
             

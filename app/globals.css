@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --font-retro: var(--font-vt323);
+  --font-retro: var(--font-source-code-pro);
   
   /* Light theme - Paper/Typewriter */
   --background: #f8f8f0;
@@ -44,9 +44,10 @@
 
 body {
   @apply bg-background text-foreground;
-  font-family: var(--font-retro), monospace;
-  font-size: 20px;
-  line-height: 1.2;
+  font-family: var(--font-retro), 'Courier New', monospace;
+  font-size: 16px;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
 }
 
 /* Add CRT screen glow effect */
@@ -79,7 +80,7 @@ body {
   opacity: 0.4;
 }
 
-.crt::after {
+.dark .crt::after {
   content: " ";
   display: block;
   position: absolute;
