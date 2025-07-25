@@ -137,7 +137,7 @@ export function QRGenerator() {
     
     const qrData = generateQRData(selectedType, formData);
     const basePath = process.env.NODE_ENV === 'production' ? '/QRetro' : '';
-    const shareUrl = `${window.location.origin}${basePath}/share?type=${selectedType}&data=${encodeURIComponent(qrData)}`;
+    const shareUrl = `${window.location.origin}${basePath}/share#type=${selectedType}&data=${encodeURIComponent(qrData)}`;
     
     // Check if we're in a secure context and clipboard API is available
     if (navigator.clipboard && window.isSecureContext) {

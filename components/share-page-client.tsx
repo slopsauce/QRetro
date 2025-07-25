@@ -1,17 +1,35 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import { RetroFrame } from "@/components/retro-frame";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ShareQRDisplay } from "@/components/share-qr-display";
 
 export function SharePageClient() {
-  const searchParams = useSearchParams();
+  const [type, setType] = useState<string | null>(null);
+  const [data, setData] = useState<string | null>(null);
   
-  // Extract QR data from URL parameters
-  const type = searchParams.get("type");
-  const data = searchParams.get("data");
+  // Extract QR data from URL fragment (hash)
+  useEffect(() => {
+    const parseFragment = () => {
+      const fragment = window.location.hash.slice(1); // Remove the #
+      if (fragment) {
+        const params = new URLSearchParams(fragment);
+        setType(params.get("type"));
+        setData(params.get("data"));
+      }
+    };
+
+    // Parse on mount
+    parseFragment();
+
+    // Listen for hash changes
+    const handleHashChange = () => parseFragment();
+    window.addEventListener('hashchange', handleHashChange);
+
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
   
   if (!type || !data) {
     return (
@@ -53,15 +71,21 @@ export function SharePageClient() {
         
         <RetroFrame title="SHARED QR CODE">
           <div className="text-center">
+            <div className="text-xs text-muted opacity-75 mb-4">
+              <div className="flex items-center justify-center gap-1">
+                <span className="text-accent">[🔒]</span>
+                <span>No tracking - your data stays private</span>
+              </div>
+            </div>
             <ShareQRDisplay qrData={decodedData} />
             
-            <div className="mt-4 p-4 border-2 border-current">
-              <div className="text-sm text-muted mb-2">QR DATA:</div>
-              <div className="break-all text-foreground">{decodedData}</div>
+            <div className="text-muted my-4">
+              Scan this QR code with your phone to access the data.
             </div>
             
-            <div className="text-muted my-4">
-              Scan this QR code with your device to access the data.
+            <div className="text-muted my-4 flex items-center justify-center gap-1">
+              <span className="text-accent">[⚠]</span>
+              <span>Only scan QR codes from people you trust</span>
             </div>
             
             <Link 

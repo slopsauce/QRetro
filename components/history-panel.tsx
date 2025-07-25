@@ -41,13 +41,15 @@ export function HistoryPanel({ onLoadItem }: HistoryPanelProps) {
   const { items, isEmpty, count, removeFromHistory, clearHistory, exportHistory } = useHistory();
   const [isExpanded, setIsExpanded] = useState(false);
   const [showAll, setShowAll] = useState(false);
+  const [hasAutoExpanded, setHasAutoExpanded] = useState(false);
 
-  // Auto-expand when items are first added
+  // Auto-expand when items are first added (only once)
   useEffect(() => {
-    if (!isEmpty && !isExpanded) {
+    if (!isEmpty && !isExpanded && !hasAutoExpanded) {
       setIsExpanded(true);
+      setHasAutoExpanded(true);
     }
-  }, [isEmpty, isExpanded]);
+  }, [isEmpty, isExpanded, hasAutoExpanded]);
 
   const displayItems = showAll ? items : items.slice(0, 3);
   const hasMore = items.length > 3;
@@ -75,7 +77,7 @@ export function HistoryPanel({ onLoadItem }: HistoryPanelProps) {
           {/* Collapse/Expand Toggle */}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="w-full text-left p-2 hover:bg-surface transition-colors border-b border-current"
+            className="w-full text-left p-2 hover:bg-surface transition-colors"
           >
             <span className="text-accent">
               {isExpanded ? "[▼]" : "[▶]"}
@@ -137,7 +139,7 @@ export function HistoryPanel({ onLoadItem }: HistoryPanelProps) {
               )}
 
               {/* Action Buttons */}
-              <div className="flex gap-2 pt-2 border-t border-current">
+              <div className="flex gap-2 pt-2">
                 <button
                   onClick={clearHistory}
                   className="px-3 py-1 text-sm border border-current hover:bg-foreground hover:text-background transition-colors"
@@ -150,6 +152,16 @@ export function HistoryPanel({ onLoadItem }: HistoryPanelProps) {
                 >
                   [EXPORT]
                 </button>
+              </div>
+            </div>
+          )}
+
+          {/* Privacy Notice - shown at bottom inside the frame when user has few items */}
+          {count <= 3 && (
+            <div className="p-2 text-xs text-muted opacity-75">
+              <div className="flex items-center gap-1">
+                <span className="text-accent">[🔒]</span>
+                <span>PRIVACY: All history stored locally on your device only</span>
               </div>
             </div>
           )}
