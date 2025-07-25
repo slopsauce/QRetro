@@ -33,6 +33,11 @@ QRetro is a retro-styled QR code generator with an authentic terminal/CRT aesthe
 - **Font Management**: Custom @font-face declarations with proper fallbacks
 - **CSS Cleanup**: Removed conflicting body selectors and Tailwind font overrides
 
+### Performance & Reliability Improvements
+- **Input Debouncing**: Added proper useDebounce hook (500ms) to prevent excessive QR generation
+- **Error Boundary**: React error boundary component for graceful crash handling with retro styling
+- **Optimization Focus**: Removed unnecessary React.memo - kept only essential improvements
+
 ## Build Commands
 ```bash
 # Development
@@ -66,15 +71,18 @@ npm run lint
 
 ## File Structure
 - `app/` - Next.js app router pages
-- `components/` - React components (QRGenerator, RetroFrame, etc.)
+- `components/` - React components (QRGenerator, RetroFrame, ErrorBoundary, etc.)
+- `hooks/` - Custom React hooks (useDebounce)
 - `lib/` - Utilities (QR generation, data types)
 - `public/` - Static assets
 
 ## Key Components
 - **QRGenerator**: Main component with form inputs and QR display
-- **RetroFrame**: ASCII border wrapper component
+- **RetroFrame**: ASCII border wrapper component  
 - **ThemeToggle**: Dark/light mode switcher
+- **ErrorBoundary**: Graceful error handling with retro crash screen
 - **ShareQRDisplay**: QR code display for share URLs
+- **useDebounce**: Custom hook for input debouncing (500ms delay)
 
 ## Development Notes
 - Static site generation compatible with GitHub Pages
@@ -115,6 +123,7 @@ npm run lint
 - ✅ Check browser console for errors (especially 404s)
 - ✅ Verify font loading works properly
 - ✅ Test both light/dark theme functionality
+- ✅ Test input debouncing works (QR only generates after 500ms of no typing)
 
 ### GitHub Pages Gotchas
 - ✅ All asset paths must be relative or account for basePath
