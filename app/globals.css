@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
+/* Font variables are defined via next/font/local in layout.tsx */
+
 :root {
-  --font-retro: var(--font-source-code-pro);
   
   /* Light theme - Paper/Typewriter */
   --background: #f8f8f0;
@@ -42,12 +43,20 @@
   @apply border-border;
 }
 
+/* Light mode - TT2020Base font via next/font */
 body {
   @apply bg-background text-foreground;
-  font-family: var(--font-retro), 'Courier New', monospace;
+  font-family: var(--font-typewriter), 'Courier New', monospace;
   font-size: 16px;
   line-height: 1.4;
   letter-spacing: 0.02em;
+}
+
+/* Dark mode - PixelOperatorMonoHB font via next/font */
+.dark body {
+  font-family: var(--font-pixel), 'Courier New', monospace;
+  font-size: 16px;
+  line-height: 1.2;
 }
 
 /* Add CRT screen glow effect */
