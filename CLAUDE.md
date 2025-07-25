@@ -40,6 +40,26 @@ QRetro is a retro-styled QR code generator with an authentic terminal/CRT aesthe
 - **Error Boundary**: React error boundary component for graceful crash handling with retro styling
 - **Optimization Focus**: Removed unnecessary React.memo - kept only essential improvements
 
+### Share Functionality & UX Improvements
+- **Toast Notifications**: Replaced ugly alert() with retro-styled toast component
+  - Appears above share button with authentic terminal styling
+  - Auto-dismisses after 3 seconds with smooth animations
+  - Green accent color with checkmark for consistent theme
+- **Share URL Fixes**: Fixed broken share URLs missing basePath for GitHub Pages
+  - Production URLs correctly include `/QRetro` prefix
+  - Development URLs work without prefix
+- **Clipboard Fallback**: Improved clipboard copying with multiple fallback strategies
+  - Modern clipboard API for secure contexts
+  - Document.execCommand fallback for older browsers
+  - Console logging fallback when all copying methods fail
+  - Removed ugly prompt() dialogs completely
+
+### Visual Polish
+- **Glow Effect Optimization**: Refined QRETRO title glow in dark mode
+  - Reduced luminosity from `currentColor` to `rgba(0, 255, 0, 0.3/0.1)`
+  - Increased spread radius for softer, more authentic CRT appearance
+  - Better balance between visibility and subtlety
+
 ## Build Commands
 ```bash
 # Development
@@ -84,6 +104,8 @@ npm run lint
 - **ThemeToggle**: Dark/light mode switcher
 - **ErrorBoundary**: Graceful error handling with retro crash screen
 - **ShareQRDisplay**: QR code display for share URLs
+- **Toast**: Retro-styled notification component for user feedback
+- **useToast**: Custom hook for toast notifications (3s auto-dismiss)
 - **useDebounce**: Custom hook for input debouncing (500ms delay)
 
 ## Development Notes
