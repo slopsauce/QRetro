@@ -2,17 +2,21 @@
 
 A retro-styled QR code generator with a terminal aesthetic. Generate QR codes for text, URLs, WiFi credentials, and more with a nostalgic interface reminiscent of old terminals and Minitel systems.
 
+🌐 **Live App**: [https://slopsauce.github.io/QRetro](https://slopsauce.github.io/QRetro)
+
 ![MIT License](https://img.shields.io/badge/license-MIT-green.svg)
 
 ## Features
 
-- 🎨 **Retro Terminal UI** - Phosphor green/amber colors with CRT effects
-- 🌓 **Dark/Light Themes** - Classic terminal dark or paper-white modes
+- 🎨 **Retro Terminal UI** - ASCII borders, phosphor green/amber colors with CRT scanlines
+- 🌓 **Dark/Light Themes** - Classic terminal dark or typewriter light modes  
 - 📱 **Multiple QR Types** - Text, URL, WiFi, vCard, SMS, Email, and more
-- 💾 **Download Options** - Save as PNG or SVG
+- ⚙️ **Error Correction** - Configurable redundancy levels (L/M/Q/H)
+- 💾 **Download Options** - Save as PNG or SVG formats
 - 🔗 **Shareable Links** - Generate permanent URLs for your QR codes
 - 📱 **PWA Support** - Install as an app with offline functionality
 - ⚡ **Fast & Free** - No authentication required, instant generation
+- 📺 **CRT Effects** - Authentic monitor glow and scanlines for QR codes
 
 ## Getting Started
 
