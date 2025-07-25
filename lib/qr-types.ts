@@ -155,6 +155,111 @@ export const QR_TYPES: QRTypeConfig[] = [
       },
     ],
   },
+  {
+    type: "vcard",
+    label: "VCARD",
+    icon: "[◄]",
+    description: "Contact card",
+    fields: [
+      {
+        name: "name",
+        label: "Full Name",
+        type: "text",
+        placeholder: "John Doe",
+        required: true,
+      },
+      {
+        name: "phone",
+        label: "Phone Number",
+        type: "tel",
+        placeholder: "+1234567890",
+        required: false,
+      },
+      {
+        name: "email",
+        label: "Email Address",
+        type: "email",
+        placeholder: "john@example.com",
+        required: false,
+      },
+      {
+        name: "organization",
+        label: "Organization",
+        type: "text",
+        placeholder: "Company Name",
+        required: false,
+      },
+      {
+        name: "title",
+        label: "Job Title",
+        type: "text",
+        placeholder: "Software Engineer",
+        required: false,
+      },
+      {
+        name: "website",
+        label: "Website",
+        type: "text",
+        placeholder: "https://example.com",
+        required: false,
+      },
+      {
+        name: "address",
+        label: "Address",
+        type: "text",
+        placeholder: "123 Main St, City, State",
+        required: false,
+      },
+      {
+        name: "notes",
+        label: "Notes",
+        type: "text",
+        placeholder: "Additional information",
+        required: false,
+      },
+    ],
+  },
+  {
+    type: "crypto",
+    label: "CRYPTO",
+    icon: "[₿]",
+    description: "Cryptocurrency address",
+    fields: [
+      {
+        name: "currency",
+        label: "Currency",
+        type: "select",
+        required: true,
+        options: [
+          { value: "bitcoin", label: "Bitcoin (BTC)" },
+          { value: "ethereum", label: "Ethereum (ETH)" },
+          { value: "litecoin", label: "Litecoin (LTC)" },
+          { value: "other", label: "Other" },
+        ],
+      },
+      {
+        name: "address",
+        label: "Wallet Address",
+        type: "text",
+        placeholder: "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2",
+        required: true,
+      },
+      {
+        name: "amount",
+        label: "Amount (optional)",
+        type: "text",
+        placeholder: "0.001",
+        required: false,
+      },
+      {
+        name: "label",
+        label: "Label (optional)",
+        type: "text",
+        placeholder: "Payment for service",
+        required: false,
+      },
+    ],
+  },
 ];
 
 export function generateQRData(type: QRDataType, data: Record<string, string>): string {
@@ -183,6 +288,49 @@ export function generateQRData(type: QRDataType, data: Record<string, string>): 
     
     case "phone":
       return `tel:${data.phone}`;
+    
+    case "vcard":
+      const vcard = [
+        "BEGIN:VCARD",
+        "VERSION:3.0",
+        data.name ? `FN:${data.name}` : "",
+        data.name ? `N:${data.name.split(" ").reverse().join(";")}` : "",
+        data.phone ? `TEL:${data.phone}` : "",
+        data.email ? `EMAIL:${data.email}` : "",
+        data.organization ? `ORG:${data.organization}` : "",
+        data.title ? `TITLE:${data.title}` : "",
+        data.website ? `URL:${data.website}` : "",
+        data.address ? `ADR:;;${data.address};;;` : "",
+        data.notes ? `NOTE:${data.notes}` : "",
+        "END:VCARD"
+      ].filter(line => line !== "").join("\n");
+      return vcard;
+    
+    case "crypto":
+      // Format depends on currency type
+      const currency = data.currency || "bitcoin";
+      const address = data.address || "";
+      const amount = data.amount;
+      const label = data.label;
+      
+      if (currency === "bitcoin") {
+        let uri = `bitcoin:${address}`;
+        const params = [];
+        if (amount) params.push(`amount=${amount}`);
+        if (label) params.push(`label=${encodeURIComponent(label)}`);
+        if (params.length > 0) uri += `?${params.join("&")}`;
+        return uri;
+      } else if (currency === "ethereum") {
+        let uri = `ethereum:${address}`;
+        const params = [];
+        if (amount) params.push(`value=${amount}`);
+        if (label) params.push(`label=${encodeURIComponent(label)}`);
+        if (params.length > 0) uri += `?${params.join("&")}`;
+        return uri;
+      } else {
+        // Generic format for other currencies
+        return `${currency}:${address}${amount ? `?amount=${amount}` : ""}`;
+      }
     
     default:
       return "";
