@@ -89,6 +89,13 @@ export function QRGenerator() {
     return () => clearTimeout(timer);
   }, [formData, qrOptions, generateQR]);
 
+  // Handle theme changes immediately (no debounce for better UX)
+  useEffect(() => {
+    if (qrCode) {
+      generateQR();
+    }
+  }, [theme, generateQR, qrCode]);
+
   const handleInputChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -129,11 +136,10 @@ export function QRGenerator() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold glow mb-2">QRETRO</h1>
+          <h1 className="text-4xl font-bold glow mb-2">
+            QRETRO<span className="cursor">█</span>
+          </h1>
           <p className="text-muted">RETRO QR CODE GENERATOR v1.0</p>
-          <div className="flex justify-center mt-4">
-            <span className="cursor">█</span>
-          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
