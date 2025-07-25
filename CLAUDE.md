@@ -5,6 +5,8 @@ QRetro is a retro-styled QR code generator with an authentic terminal/CRT aesthe
 
 **Live URL**: https://slopsauce.github.io/QRetro
 
+**Note**: `slopsauce` is a GitHub organization, not a user. It's valid in URLs and repository paths, but cannot be used as a reviewer/assignee in GitHub workflows.
+
 ## Recent Changes
 
 ### UI Improvements
