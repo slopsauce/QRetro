@@ -91,6 +91,22 @@ export function QRGenerator() {
     }
   };
 
+  const handleShare = async () => {
+    if (!selectedTypeConfig) return;
+    
+    const qrData = generateQRData(selectedType, formData);
+    const shareId = Math.random().toString(36).substring(2, 15);
+    const shareUrl = `${window.location.origin}/qr/${shareId}?type=${selectedType}&data=${encodeURIComponent(qrData)}`;
+    
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      alert("Share link copied to clipboard!");
+    } catch (err) {
+      // Fallback for browsers that don't support clipboard API
+      prompt("Copy this link to share:", shareUrl);
+    }
+  };
+
   return (
     <div className="crt min-h-screen p-8">
       <div className="max-w-6xl mx-auto">
@@ -188,18 +204,24 @@ export function QRGenerator() {
                       alt="Generated QR Code"
                       className="mx-auto mb-4 border-2 border-current"
                     />
-                    <div className="flex gap-4 justify-center">
+                    <div className="flex gap-2 justify-center flex-wrap">
                       <button
                         onClick={() => handleDownload("png")}
-                        className="px-4 py-2 border-2 border-current hover:bg-foreground hover:text-background transition-colors"
+                        className="px-3 py-2 border-2 border-current hover:bg-foreground hover:text-background transition-colors text-sm"
                       >
-                        [DOWNLOAD PNG]
+                        [PNG]
                       </button>
                       <button
                         onClick={() => handleDownload("svg")}
-                        className="px-4 py-2 border-2 border-current hover:bg-foreground hover:text-background transition-colors"
+                        className="px-3 py-2 border-2 border-current hover:bg-foreground hover:text-background transition-colors text-sm"
                       >
-                        [DOWNLOAD SVG]
+                        [SVG]
+                      </button>
+                      <button
+                        onClick={handleShare}
+                        className="px-3 py-2 border-2 border-accent text-accent hover:bg-accent hover:text-background transition-colors text-sm"
+                      >
+                        [SHARE]
                       </button>
                     </div>
                   </div>
