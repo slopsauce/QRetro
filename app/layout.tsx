@@ -5,7 +5,7 @@ import "./globals.css";
 
 // Dark mode terminal font
 const pixelFont = localFont({
-  src: "./fonts/PixelOperatorMonoHB.ttf",
+  src: "../public/fonts/PixelOperatorMonoHB.ttf",
   variable: "--font-pixel",
   display: "swap",
 });
@@ -13,8 +13,8 @@ const pixelFont = localFont({
 // Light mode typewriter font
 const typewriterFont = localFont({
   src: [
-    { path: "./fonts/TT2020Base-Regular.woff2", weight: "400" },
-    { path: "./fonts/TT2020Base-Regular.ttf", weight: "400" },
+    { path: "../public/fonts/TT2020Base-Regular.woff2", weight: "400" },
+    { path: "../public/fonts/TT2020Base-Regular.ttf", weight: "400" },
   ],
   variable: "--font-typewriter",
   display: "swap",
