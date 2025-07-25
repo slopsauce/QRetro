@@ -13,7 +13,9 @@
       "Bash(rmdir:*)",
       "Bash(npm install:*)",
       "Bash(ls:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ],
     "deny": []
   }
