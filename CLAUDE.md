@@ -93,5 +93,30 @@ npm run lint
 - TTF format as fallback for broader compatibility
 - Font display: swap for better loading experience
 
+## Development Checklist
+
+### CSS/Font Changes
+- ✅ Use relative paths (`./fonts/` not `/fonts/`) for GitHub Pages compatibility
+- ✅ Check for CSS selector conflicts (avoid multiple body rules)
+- ✅ Remember basePath `/QRetro/` affects all asset URLs in production
+- ✅ Test both light/dark themes after changes
+
+### Feature/Config Additions
+- ✅ Update README.md and CLAUDE.md immediately when adding features
+- ✅ Update tech stack section for new dependencies/tools
+- ✅ Consider production vs development environment differences
+
+### Pre-Commit Validation
+- ✅ Run `npm run build` to catch build issues
+- ✅ Check browser console for errors (especially 404s)
+- ✅ Verify font loading works properly
+- ✅ Test both light/dark theme functionality
+
+### GitHub Pages Gotchas
+- ✅ All asset paths must be relative or account for basePath
+- ✅ Static exports behave differently than dev server
+- ✅ Font loading commonly breaks due to path issues
+- ✅ Build output goes to `out/` directory for deployment
+
 ## Git & Workflow Reminders
 - Always check if you need to update the markdown files when committing
