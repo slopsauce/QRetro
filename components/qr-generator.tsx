@@ -236,12 +236,14 @@ export function QRGenerator() {
                   </div>
                 ) : qrCode ? (
                   <div>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={qrCode}
-                      alt="Generated QR Code"
-                      className="mx-auto mb-4 border-2 border-current"
-                    />
+                    <div className="crt-qr mx-auto mb-4 inline-block">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={qrCode}
+                        alt="Generated QR Code"
+                        className="border-2 border-current"
+                      />
+                    </div>
                     <div className="flex gap-2 justify-center flex-wrap">
                       <button
                         onClick={() => handleDownload("png")}

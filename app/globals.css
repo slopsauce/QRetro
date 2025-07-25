@@ -185,3 +185,81 @@ body {
   border: 2px solid currentColor;
   border-style: dashed;
 }
+
+/* CRT QR Code Effects */
+.crt-qr {
+  position: relative;
+  display: inline-block;
+  transform: rotate(-0.5deg);
+  filter: contrast(1.1) brightness(0.95);
+}
+
+.crt-qr::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    transparent 50%,
+    rgba(0, 0, 0, 0.05) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.crt-qr img {
+  display: block;
+  animation: crtWarp 8s ease-in-out infinite;
+}
+
+@keyframes crtWarp {
+  0%, 100% {
+    transform: scale(1) translateX(0);
+    filter: blur(0);
+  }
+  25% {
+    transform: scale(1.002) translateX(0.5px);
+    filter: blur(0.1px);
+  }
+  50% {
+    transform: scale(0.998) translateX(-0.3px);
+    filter: blur(0.05px);
+  }
+  75% {
+    transform: scale(1.001) translateX(0.2px);
+    filter: blur(0.15px);
+  }
+}
+
+/* Chromatic aberration effect for dark theme */
+.dark .crt-qr::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: inherit;
+  mix-blend-mode: multiply;
+  opacity: 0.03;
+  animation: chromaticShift 10s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes chromaticShift {
+  0%, 100% {
+    transform: translateX(0);
+    filter: hue-rotate(0deg);
+  }
+  33% {
+    transform: translateX(0.5px);
+    filter: hue-rotate(2deg);
+  }
+  66% {
+    transform: translateX(-0.5px);
+    filter: hue-rotate(-2deg);
+  }
+}
