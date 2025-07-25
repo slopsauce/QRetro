@@ -1,12 +1,23 @@
 import type { Metadata } from "next";
-import { Source_Code_Pro } from "next/font/google";
+import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/providers";
 import "./globals.css";
 
-const sourceCodePro = Source_Code_Pro({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-  variable: "--font-source-code-pro",
+// Dark mode terminal font
+const pixelFont = localFont({
+  src: "../public/fonts/PixelOperatorMonoHB.ttf",
+  variable: "--font-pixel",
+  display: "swap",
+});
+
+// Light mode typewriter font
+const typewriterFont = localFont({
+  src: [
+    { path: "../public/fonts/TT2020Base-Regular.woff2", weight: "400" },
+    { path: "../public/fonts/TT2020Base-Regular.ttf", weight: "400" },
+  ],
+  variable: "--font-typewriter",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -28,10 +39,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${sourceCodePro.variable} font-mono antialiased`}
-      >
+    <html lang="en" suppressHydrationWarning className={`${pixelFont.variable} ${typewriterFont.variable}`}>
+      <body className="antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
