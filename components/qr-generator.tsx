@@ -7,6 +7,7 @@ import { generateQRCode, generateQRCodeSVG, downloadQRCode, downloadQRCodeSVG } 
 import { RetroFrame } from "./retro-frame";
 import { cn } from "@/lib/utils";
 import { useDebounce } from "@/hooks/use-debounce";
+import { useToast } from "./toast";
 
 interface QROptions {
   errorCorrectionLevel: "L" | "M" | "Q" | "H";
@@ -16,6 +17,7 @@ interface QROptions {
 
 export function QRGenerator() {
   const { theme } = useTheme();
+  const { showToast, ToastComponent } = useToast();
   const [selectedType, setSelectedType] = useState<QRDataType>("text");
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [qrOptions, setQrOptions] = useState<QROptions>({
@@ -121,14 +123,43 @@ export function QRGenerator() {
     if (!selectedTypeConfig) return;
     
     const qrData = generateQRData(selectedType, formData);
-    const shareUrl = `${window.location.origin}/share?type=${selectedType}&data=${encodeURIComponent(qrData)}`;
+    const basePath = process.env.NODE_ENV === 'production' ? '/QRetro' : '';
+    const shareUrl = `${window.location.origin}${basePath}/share?type=${selectedType}&data=${encodeURIComponent(qrData)}`;
     
+    // Check if we're in a secure context and clipboard API is available
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        showToast("SHARE LINK COPIED!");
+        return;
+      } catch (error) {
+        console.warn("Clipboard API failed:", error);
+      }
+    }
+    
+    // Fallback: create a temporary input element to copy text
     try {
-      await navigator.clipboard.writeText(shareUrl);
-      alert("Share link copied to clipboard!");
+      const textArea = document.createElement('textarea');
+      textArea.value = shareUrl;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textArea);
+      
+      if (successful) {
+        showToast("SHARE LINK COPIED!");
+      } else {
+        showToast("COPY FAILED - CHECK CONSOLE");
+        console.log("Share URL:", shareUrl);
+      }
     } catch {
-      // Fallback for browsers that don't support clipboard API
-      prompt("Copy this link to share:", shareUrl);
+      showToast("COPY FAILED - CHECK CONSOLE");
+      console.log("Share URL:", shareUrl);
     }
   };
 
@@ -264,12 +295,15 @@ export function QRGenerator() {
                       >
                         [SVG]
                       </button>
-                      <button
-                        onClick={handleShare}
-                        className="px-3 py-2 border-2 border-accent text-accent hover:bg-accent hover:text-background transition-colors text-sm"
-                      >
-                        [SHARE]
-                      </button>
+                      <div className="relative">
+                        <button
+                          onClick={handleShare}
+                          className="px-3 py-2 border-2 border-accent text-accent hover:bg-accent hover:text-background transition-colors text-sm"
+                        >
+                          [SHARE]
+                        </button>
+                        <ToastComponent />
+                      </div>
                     </div>
                   </div>
                 ) : (
