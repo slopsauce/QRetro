@@ -5,12 +5,18 @@ import { useTheme } from "next-themes";
 import { QRDataType, QR_TYPES, generateQRData } from "@/lib/qr-types";
 import { generateQRCode, generateQRCodeSVG, downloadQRCode, downloadQRCodeSVG } from "@/lib/qr-generator";
 import { RetroFrame } from "./retro-frame";
+import { QROptionsPanel, QROptions } from "./qr-options";
 import { cn } from "@/lib/utils";
 
 export function QRGenerator() {
   const { theme } = useTheme();
   const [selectedType, setSelectedType] = useState<QRDataType>("text");
   const [formData, setFormData] = useState<Record<string, string>>({});
+  const [qrOptions, setQrOptions] = useState<QROptions>({
+    errorCorrectionLevel: "M",
+    margin: 2,
+    width: 400,
+  });
   const [qrCode, setQrCode] = useState<string>("");
   const [qrSvg, setQrSvg] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -46,9 +52,14 @@ export function QRGenerator() {
         ? { dark: "#00ff00", light: "#000000" }
         : { dark: "#1a1a1a", light: "#f8f8f0" };
 
+      const options = {
+        ...qrOptions,
+        color: colors
+      };
+
       const [pngDataUrl, svg] = await Promise.all([
-        generateQRCode(qrData, { color: colors }),
-        generateQRCodeSVG(qrData, { color: colors })
+        generateQRCode(qrData, options),
+        generateQRCodeSVG(qrData, options)
       ]);
 
       setQrCode(pngDataUrl);
@@ -58,7 +69,7 @@ export function QRGenerator() {
     } finally {
       setIsGenerating(false);
     }
-  }, [selectedType, formData, selectedTypeConfig, theme]);
+  }, [selectedType, formData, selectedTypeConfig, theme, qrOptions]);
 
   // Auto-generate when data changes
   useEffect(() => {
@@ -69,7 +80,7 @@ export function QRGenerator() {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [formData, generateQR]);
+  }, [formData, qrOptions, generateQR]);
 
   const handleInputChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -107,8 +118,8 @@ export function QRGenerator() {
   };
 
   return (
-    <div className="crt min-h-screen p-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="crt min-h-screen p-6">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold glow mb-2">QRETRO</h1>
@@ -118,9 +129,9 @@ export function QRGenerator() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Input Panel */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             {/* Type Selection */}
             <RetroFrame title="SELECT TYPE">
               <div className="grid grid-cols-2 gap-2">
@@ -181,8 +192,16 @@ export function QRGenerator() {
             )}
           </div>
 
+          {/* QR Options Panel */}
+          <div>
+            <QROptionsPanel 
+              options={qrOptions} 
+              onChange={setQrOptions} 
+            />
+          </div>
+
           {/* Output Panel */}
-          <div className="space-y-6">
+          <div>
             <RetroFrame title="QR CODE OUTPUT">
               <div className="text-center">
                 {isGenerating ? (
