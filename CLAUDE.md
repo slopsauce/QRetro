@@ -84,9 +84,12 @@ npm run lint
 
 ### Font Troubleshooting
 - Custom fonts stored in `public/fonts/` directory
+- **Use `next/font/local` instead of CSS @font-face** for static exports
+- Fonts must be imported in layout.tsx to be included in build
+- CSS @font-face declarations don't work with `output: 'export'`
+- Use CSS variables (--font-pixel, --font-typewriter) for theme-specific fonts
 - Ensure no `font-mono` class conflicts in layout.tsx
 - CSS body selectors must not duplicate (use theme-specific selectors)
-- Font loading uses CSS @font-face with fallbacks to system monospace fonts
 
 ### Performance Notes
 - WOFF2 format preferred for modern browsers (smaller file size)
@@ -96,7 +99,8 @@ npm run lint
 ## Development Checklist
 
 ### CSS/Font Changes
-- ✅ Use relative paths (`./fonts/` not `/fonts/`) for GitHub Pages compatibility
+- ✅ Use `next/font/local` for custom fonts (not CSS @font-face)
+- ✅ Import fonts in layout.tsx to include in static export build
 - ✅ Check for CSS selector conflicts (avoid multiple body rules)
 - ✅ Remember basePath `/QRetro/` affects all asset URLs in production
 - ✅ Test both light/dark themes after changes
