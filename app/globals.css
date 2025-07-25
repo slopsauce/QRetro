@@ -15,14 +15,14 @@
 }
 
 .dark {
-  /* Dark theme - Terminal/Phosphor */
-  --background: #000000;
+  /* Dark theme - Terminal/Phosphor with CRT glow */
+  --background: #001100;
   --foreground: #00ff00;
   --primary: #00ff00;
   --secondary: #00cc00;
   --accent: #ffb000;
   --border: #00ff00;
-  --surface: #0a0a0a;
+  --surface: #002200;
   --muted: #00aa00;
 }
 
@@ -49,6 +49,12 @@ body {
   line-height: 1.2;
 }
 
+/* Add CRT screen glow effect */
+.dark body {
+  background: radial-gradient(ellipse at center, #002200 0%, #001100 50%, #000000 100%);
+  box-shadow: inset 0 0 50px rgba(0, 255, 0, 0.1);
+}
+
 /* CRT Effect Styles */
 .crt {
   position: relative;
@@ -67,7 +73,7 @@ body {
     rgba(18, 16, 16, 0) 50%,
     rgba(0, 0, 0, 0.25) 50%
   );
-  z-index: 2;
+  z-index: -1;
   background-size: 100% 2px;
   pointer-events: none;
   opacity: 0.4;
@@ -83,7 +89,7 @@ body {
   right: 0;
   background: rgba(18, 16, 16, 0.1);
   opacity: 0;
-  z-index: 2;
+  z-index: -1;
   pointer-events: none;
   animation: flicker 0.15s infinite;
 }

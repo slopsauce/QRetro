@@ -19,7 +19,11 @@
       "Bash(gh run list:*)",
       "Bash(gh run view:*)",
       "Bash(npm run build:*)",
-      "Bash(gh api:*)"
+      "Bash(gh api:*)",
+      "Bash(curl:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_click"
     ],
     "deny": []
   }
