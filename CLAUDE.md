@@ -45,12 +45,22 @@ npm run build
 npm run lint
 ```
 
+## CI/CD Pipeline
+- **GitHub Actions**: Runs on every PR and push to main
+  - Install dependencies (`npm ci`)
+  - Run linting (`npm run lint`)
+  - Build application (`npm run build`)
+- **Dependabot**: Weekly dependency updates (Mondays 9 AM)
+  - Auto-merge patch/minor updates if CI passes
+  - Manual review required for major version changes
+
 ## Tech Stack
 - **Framework**: Next.js 14+ with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS with custom retro theme
 - **Fonts**: Custom TTF/WOFF2 fonts (PixelOperatorMonoHB, TT2020Base)
 - **QR Generation**: qrcode.js library
+- **CI/CD**: GitHub Actions + Dependabot for automated maintenance
 - **Deployment**: GitHub Pages with automated CI/CD
 - **PWA**: Manifest support for installable app
 
@@ -82,3 +92,6 @@ npm run lint
 - WOFF2 format preferred for modern browsers (smaller file size)
 - TTF format as fallback for broader compatibility
 - Font display: swap for better loading experience
+
+## Git & Workflow Reminders
+- Always check if you need to update the markdown files when committing

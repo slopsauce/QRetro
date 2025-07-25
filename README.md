@@ -72,6 +72,12 @@ npm run lint
 
 This project is automatically deployed to GitHub Pages on every push to the main branch.
 
+### Automated Maintenance
+
+- **CI/CD**: GitHub Actions runs build and lint checks on all pull requests
+- **Dependencies**: Dependabot automatically updates npm packages weekly
+- **Quality**: All changes must pass CI before merging
+
 ## Tech Stack
 
 - **Framework**: Next.js 14+ with TypeScript
@@ -79,6 +85,7 @@ This project is automatically deployed to GitHub Pages on every push to the main
 - **QR Generation**: qrcode.js
 - **Theming**: next-themes with dual font system
 - **Fonts**: PixelOperatorMonoHB (terminal) & TT2020Base (typewriter)
+- **CI/CD**: GitHub Actions with automated dependency updates
 - **Deployment**: GitHub Pages
 
 ## Contributing
