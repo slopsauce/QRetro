@@ -121,7 +121,7 @@ export const QR_TYPES: QRTypeConfig[] = [
   {
     type: "sms",
     label: "SMS",
-    icon: "[▪]",
+    icon: "[»]",
     description: "Text message",
     fields: [
       {
@@ -143,7 +143,7 @@ export const QR_TYPES: QRTypeConfig[] = [
   {
     type: "phone",
     label: "PHONE",
-    icon: "[☎]",
+    icon: "[#]",
     description: "Phone number",
     fields: [
       {
