@@ -95,13 +95,12 @@ export function QRGenerator() {
     if (!selectedTypeConfig) return;
     
     const qrData = generateQRData(selectedType, formData);
-    const shareId = Math.random().toString(36).substring(2, 15);
-    const shareUrl = `${window.location.origin}/qr/${shareId}?type=${selectedType}&data=${encodeURIComponent(qrData)}`;
+    const shareUrl = `${window.location.origin}/share?type=${selectedType}&data=${encodeURIComponent(qrData)}`;
     
     try {
       await navigator.clipboard.writeText(shareUrl);
       alert("Share link copied to clipboard!");
-    } catch (err) {
+    } catch {
       // Fallback for browsers that don't support clipboard API
       prompt("Copy this link to share:", shareUrl);
     }
@@ -199,6 +198,7 @@ export function QRGenerator() {
                   </div>
                 ) : qrCode ? (
                   <div>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={qrCode}
                       alt="Generated QR Code"

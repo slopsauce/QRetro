@@ -1,19 +1,17 @@
+"use client";
+
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { RetroFrame } from "@/components/retro-frame";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { ShareQRDisplay } from "@/components/share-qr-display";
 
-interface SharePageProps {
-  params: Promise<{ id: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
-
-export default async function SharePage({ params, searchParams }: SharePageProps) {
-  const { id } = await params;
-  const search = await searchParams;
+export function SharePageClient() {
+  const searchParams = useSearchParams();
   
   // Extract QR data from URL parameters
-  const type = search.type as string;
-  const data = search.data as string;
+  const type = searchParams.get("type");
+  const data = searchParams.get("data");
   
   if (!type || !data) {
     return (
@@ -55,12 +53,14 @@ export default async function SharePage({ params, searchParams }: SharePageProps
         
         <RetroFrame title="SHARED QR CODE">
           <div className="text-center">
-            <div className="mb-4 p-4 border-2 border-current">
+            <ShareQRDisplay qrData={decodedData} />
+            
+            <div className="mt-4 p-4 border-2 border-current">
               <div className="text-sm text-muted mb-2">QR DATA:</div>
               <div className="break-all text-foreground">{decodedData}</div>
             </div>
             
-            <div className="text-muted mb-4">
+            <div className="text-muted my-4">
               Scan this QR code with your device to access the data.
             </div>
             
