@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "QRetro - Retro QR Code Generator",
   description: "Generate QR codes with a nostalgic terminal aesthetic. Create codes for text, URLs, WiFi, and more!",
   keywords: ["qr code", "generator", "retro", "terminal", "free", "online"],
-  authors: [{ name: "slopsauce" }],
+  authors: [{ name: "claude-code" }],
   manifest: process.env.NODE_ENV === 'production' ? "/QRetro/manifest.json" : "/manifest.json",
   openGraph: {
     title: "QRetro - Retro QR Code Generator",

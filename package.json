@@ -2,7 +2,7 @@
   "name": "qretro",
   "version": "0.1.0",
   "description": "A retro-styled QR code generator with a terminal aesthetic",
-  "author": "slopsauce",
+  "author": "claude-code",
   "license": "MIT",
   "repository": {
     "type": "git",

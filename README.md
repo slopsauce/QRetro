@@ -101,4 +101,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Made with 💚 by [slopsauce](https://github.com/slopsauce)
+Made with 💚 by [claude-code](https://github.com/anthropics/claude-code)

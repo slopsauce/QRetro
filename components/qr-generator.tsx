@@ -283,7 +283,7 @@ export function QRGenerator() {
 
         {/* Footer */}
         <div className="text-center mt-8 text-muted">
-          <p>QRetro - MIT License - Made with 💚 by slopsauce</p>
+          <p>QRetro - MIT License - Made with 💚 by claude-code</p>
         </div>
       </div>
     </div>
