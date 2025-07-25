@@ -5,8 +5,13 @@ import { useTheme } from "next-themes";
 import { QRDataType, QR_TYPES, generateQRData } from "@/lib/qr-types";
 import { generateQRCode, generateQRCodeSVG, downloadQRCode, downloadQRCodeSVG } from "@/lib/qr-generator";
 import { RetroFrame } from "./retro-frame";
-import { QROptionsPanel, QROptions } from "./qr-options";
 import { cn } from "@/lib/utils";
+
+interface QROptions {
+  errorCorrectionLevel: "L" | "M" | "Q" | "H";
+  margin: number;
+  width: number;
+}
 
 export function QRGenerator() {
   const { theme } = useTheme();
@@ -131,7 +136,7 @@ export function QRGenerator() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Input Panel */}
           <div className="space-y-4">
             {/* Type Selection */}
@@ -189,17 +194,29 @@ export function QRGenerator() {
                       )}
                     </div>
                   ))}
+                  
+                  {/* Error Correction Level */}
+                  <div className="mt-4 pt-4 border-t border-muted">
+                    <label className="block text-sm font-bold mb-2">
+                      Error Correction Level
+                    </label>
+                    <select
+                      value={qrOptions.errorCorrectionLevel}
+                      onChange={(e) => setQrOptions(prev => ({ ...prev, errorCorrectionLevel: e.target.value as "L" | "M" | "Q" | "H" }))}
+                      className="w-full p-2 bg-background border-2 border-current text-foreground"
+                    >
+                      <option value="L">L - Low (~7% recovery)</option>
+                      <option value="M">M - Medium (~15% recovery)</option>
+                      <option value="Q">Q - Quartile (~25% recovery)</option>
+                      <option value="H">H - High (~30% recovery)</option>
+                    </select>
+                    <div className="text-xs text-muted mt-1">
+                      Higher levels allow recovery from more damage
+                    </div>
+                  </div>
                 </div>
               </RetroFrame>
             )}
-          </div>
-
-          {/* QR Options Panel */}
-          <div>
-            <QROptionsPanel 
-              options={qrOptions} 
-              onChange={setQrOptions} 
-            />
           </div>
 
           {/* Output Panel */}
