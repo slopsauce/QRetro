@@ -1,9 +1,11 @@
 # QRetro - Development Notes
 
 ## Project Overview
-QRetro is a retro-styled QR code generator with an authentic terminal/CRT aesthetic. Built with Next.js 14+ and TypeScript.
+QRetro is a retro-styled QR code generator with an authentic terminal/CRT aesthetic. Built with Next.js 15+ and TypeScript.
 
 **Live URL**: https://slopsauce.github.io/QRetro
+
+**Note**: `slopsauce` is a GitHub organization, not a user. It's valid in URLs and repository paths, but cannot be used as a reviewer/assignee in GitHub workflows.
 
 ## Recent Changes
 
@@ -60,7 +62,7 @@ npm run lint
   - Manual review required for major version changes
 
 ## Tech Stack
-- **Framework**: Next.js 14+ with App Router
+- **Framework**: Next.js 15+ with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS with custom retro theme
 - **Fonts**: Custom TTF/WOFF2 fonts (PixelOperatorMonoHB, TT2020Base)
@@ -98,6 +100,10 @@ npm run lint
 - Use CSS variables (--font-pixel, --font-typewriter) for theme-specific fonts
 - Ensure no `font-mono` class conflicts in layout.tsx
 - CSS body selectors must not duplicate (use theme-specific selectors)
+- **IMPORTANT**: Font paths in `next/font/local` are relative to the file location
+  - From `app/layout.tsx`, use `../public/fonts/filename.ttf` 
+  - Do NOT use `./fonts/` as this looks for fonts in the app directory
+  - The original paths `../public/fonts/` are correct and should not be "simplified"
 
 ### Performance Notes
 - WOFF2 format preferred for modern browsers (smaller file size)

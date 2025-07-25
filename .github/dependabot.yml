@@ -7,8 +7,9 @@ updates:
       day: "monday"
       time: "09:00"
     open-pull-requests-limit: 5
-    reviewers:
-      - "slopsauce"
     commit-message:
       prefix: "chore"
       include: "scope"
+    # Auto-merge patch and minor updates only
+    # Major updates will require manual review (no auto-merge by default)
+    enable-auto-merge: true
