@@ -6,6 +6,7 @@ import { QRDataType, QR_TYPES, generateQRData } from "@/lib/qr-types";
 import { generateQRCode, generateQRCodeSVG, downloadQRCode, downloadQRCodeSVG } from "@/lib/qr-generator";
 import { RetroFrame } from "./retro-frame";
 import { cn } from "@/lib/utils";
+import { useDebounce } from "@/hooks/use-debounce";
 
 interface QROptions {
   errorCorrectionLevel: "L" | "M" | "Q" | "H";
@@ -22,6 +23,10 @@ export function QRGenerator() {
     margin: 2,
     width: 400,
   });
+
+  // Debounce form data to prevent excessive QR generation
+  const debouncedFormData = useDebounce(formData, 500);
+  const debouncedQrOptions = useDebounce(qrOptions, 500);
   const [qrCode, setQrCode] = useState<string>("");
   const [qrSvg, setQrSvg] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -32,9 +37,9 @@ export function QRGenerator() {
   const generateQR = useCallback(async () => {
     if (!selectedTypeConfig) return;
 
-    // Validate required fields
+    // Validate required fields using debounced data
     const missingFields = selectedTypeConfig.fields
-      .filter(field => field.required && !formData[field.name])
+      .filter(field => field.required && !debouncedFormData[field.name])
       .map(field => field.label);
 
     if (missingFields.length > 0) {
@@ -46,7 +51,7 @@ export function QRGenerator() {
     setError("");
 
     try {
-      const qrData = generateQRData(selectedType, formData);
+      const qrData = generateQRData(selectedType, debouncedFormData);
       
       if (!qrData) {
         setError("No data to generate QR code");
@@ -58,9 +63,9 @@ export function QRGenerator() {
         : { dark: "#1a1a1a", light: "#f8f8f0" };
 
       const options = {
-        errorCorrectionLevel: qrOptions.errorCorrectionLevel,
-        margin: qrOptions.margin,
-        width: qrOptions.width,
+        errorCorrectionLevel: debouncedQrOptions.errorCorrectionLevel,
+        margin: debouncedQrOptions.margin,
+        width: debouncedQrOptions.width,
         color: colors
       };
 
@@ -76,18 +81,14 @@ export function QRGenerator() {
     } finally {
       setIsGenerating(false);
     }
-  }, [selectedType, formData, selectedTypeConfig, theme, qrOptions]);
+  }, [selectedType, debouncedFormData, selectedTypeConfig, theme, debouncedQrOptions]);
 
-  // Auto-generate when data changes
+  // Auto-generate when debounced data changes
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (Object.values(formData).some(value => value.trim())) {
-        generateQR();
-      }
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [formData, qrOptions, generateQR]);
+    if (Object.values(debouncedFormData).some(value => value.trim())) {
+      generateQR();
+    }
+  }, [debouncedFormData, debouncedQrOptions, generateQR]);
 
   // Handle theme changes immediately (no debounce for better UX)
   useEffect(() => {

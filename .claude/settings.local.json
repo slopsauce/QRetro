@@ -29,7 +29,8 @@
       "mcp__playwright__browser_snapshot",
       "Bash(cp:*)",
       "mcp__github__search_repositories",
-      "mcp__playwright__browser_network_requests"
+      "mcp__playwright__browser_network_requests",
+      "Bash(git checkout:*)"
     ],
     "deny": []
   }
