@@ -1,3 +1,4 @@
+import React from "react";
 import { cn } from "@/lib/utils";
 
 interface RetroFrameProps {
@@ -6,7 +7,7 @@ interface RetroFrameProps {
   className?: string;
 }
 
-export function RetroFrame({ children, title, className }: RetroFrameProps) {
+export const RetroFrame = React.memo(function RetroFrame({ children, title, className }: RetroFrameProps) {
   return (
     <div className={cn("relative mb-6 font-mono", className)}>
       {/* Top border with title */}
@@ -39,4 +40,4 @@ export function RetroFrame({ children, title, className }: RetroFrameProps) {
       </div>
     </div>
   );
-}
+});
