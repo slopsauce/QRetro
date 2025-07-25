@@ -8,15 +8,15 @@ A retro-styled QR code generator with a terminal aesthetic. Generate QR codes fo
 
 ## Features
 
-- 🎨 **Retro Terminal UI** - ASCII borders, phosphor green/amber colors with CRT scanlines
-- 🌓 **Dark/Light Themes** - Classic terminal dark or typewriter light modes  
+- 🎨 **Retro Terminal UI** - Clean borders, authentic phosphor green/amber colors with CRT scanlines
+- 🌓 **Dual Theme Fonts** - PixelOperatorMonoHB terminal font (dark) & TT2020Base typewriter font (light)  
 - 📱 **Multiple QR Types** - Text, URL, WiFi, vCard, SMS, Email, and more
 - ⚙️ **Error Correction** - Configurable redundancy levels (L/M/Q/H)
 - 💾 **Download Options** - Save as PNG or SVG formats
 - 🔗 **Shareable Links** - Generate permanent URLs for your QR codes
 - 📱 **PWA Support** - Install as an app with offline functionality
 - ⚡ **Fast & Free** - No authentication required, instant generation
-- 📺 **CRT Effects** - Authentic monitor glow and scanlines for QR codes
+- 📺 **CRT Effects** - Subtle monitor glow and horizontal scanlines for authentic retro feel
 
 ## Getting Started
 
@@ -75,9 +75,10 @@ This project is automatically deployed to GitHub Pages on every push to the main
 ## Tech Stack
 
 - **Framework**: Next.js 14+ with TypeScript
-- **Styling**: Tailwind CSS
+- **Styling**: Tailwind CSS with custom retro fonts
 - **QR Generation**: qrcode.js
-- **Theming**: next-themes
+- **Theming**: next-themes with dual font system
+- **Fonts**: PixelOperatorMonoHB (terminal) & TT2020Base (typewriter)
 - **Deployment**: GitHub Pages
 
 ## Contributing
