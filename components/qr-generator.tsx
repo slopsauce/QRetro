@@ -135,7 +135,7 @@ export function QRGenerator() {
           {/* Input Panel */}
           <div className="space-y-4">
             {/* Type Selection */}
-            <RetroFrame>
+            <RetroFrame title="SELECT TYPE">
               <div className="grid grid-cols-2 gap-2">
                 {QR_TYPES.map((type) => (
                   <button
@@ -157,7 +157,7 @@ export function QRGenerator() {
 
             {/* Input Fields */}
             {selectedTypeConfig && (
-              <RetroFrame>
+              <RetroFrame title="INPUT DATA">
                 <div className="space-y-4">
                   {selectedTypeConfig.fields.map((field) => (
                     <div key={field.name}>
@@ -204,7 +204,7 @@ export function QRGenerator() {
 
           {/* Output Panel */}
           <div>
-            <RetroFrame>
+            <RetroFrame title="QR CODE OUTPUT">
               <div className="text-center">
                 {isGenerating ? (
                   <div className="py-20">
