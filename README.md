@@ -80,7 +80,7 @@ This project is automatically deployed to GitHub Pages on every push to the main
 
 ## Tech Stack
 
-- **Framework**: Next.js 14+ with TypeScript
+- **Framework**: Next.js 15+ with TypeScript
 - **Styling**: Tailwind CSS with custom retro fonts
 - **QR Generation**: qrcode.js
 - **Theming**: next-themes with dual font system

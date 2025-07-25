@@ -1,7 +1,7 @@
 # QRetro - Development Notes
 
 ## Project Overview
-QRetro is a retro-styled QR code generator with an authentic terminal/CRT aesthetic. Built with Next.js 14+ and TypeScript.
+QRetro is a retro-styled QR code generator with an authentic terminal/CRT aesthetic. Built with Next.js 15+ and TypeScript.
 
 **Live URL**: https://slopsauce.github.io/QRetro
 
@@ -62,7 +62,7 @@ npm run lint
   - Manual review required for major version changes
 
 ## Tech Stack
-- **Framework**: Next.js 14+ with App Router
+- **Framework**: Next.js 15+ with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS with custom retro theme
 - **Fonts**: Custom TTF/WOFF2 fonts (PixelOperatorMonoHB, TT2020Base)
