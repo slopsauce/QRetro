@@ -429,7 +429,18 @@ export function QRGenerator() {
 
         {/* Footer */}
         <div className="text-center mt-8 text-muted space-y-2">
-          <p>QRetro - MIT License - Made with 💚 by claude-code</p>
+          <p>
+            QRetro - MIT License - Made with 💚 by claude-code
+            {" • "}
+            <a 
+              href="https://github.com/slopsauce/QRetro" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-accent hover:text-foreground transition-colors underline"
+            >
+              [GitHub]
+            </a>
+          </p>
           <button
             onClick={toggleHelp}
             className="text-accent hover:text-foreground transition-colors text-sm"
