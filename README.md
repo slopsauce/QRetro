@@ -6,6 +6,18 @@ A retro-styled QR code generator with a terminal aesthetic. Generate QR codes fo
 
 ![MIT License](https://img.shields.io/badge/license-MIT-green.svg)
 
+## Screenshots
+
+<div align="center">
+  <img src="public/screenshot-desktop.png" alt="QRetro Dark Theme" width="600">
+  <br>
+  <em>Dark theme with classic terminal aesthetics</em>
+  <br><br>
+  <img src="public/screenshot-desktop-light.png" alt="QRetro Light Theme" width="600">
+  <br>
+  <em>Light theme with typewriter aesthetics</em>
+</div>
+
 ## Features
 
 - 🎨 **Retro Terminal UI** - Clean borders, authentic phosphor green/amber colors with CRT scanlines
