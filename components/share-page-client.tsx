@@ -66,7 +66,7 @@ export function SharePageClient() {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold glow mb-2">QRETRO</h1>
-          <p className="text-muted">SHARED QR CODE - {type.toUpperCase()}</p>
+          <p className="text-muted">SHARED QR CODE - {type?.toUpperCase() || 'UNKNOWN'}</p>
         </div>
         
         <RetroFrame title="SHARED QR CODE">

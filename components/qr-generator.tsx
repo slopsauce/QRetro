@@ -145,8 +145,8 @@ export function QRGenerator() {
         await navigator.clipboard.writeText(shareUrl);
         showToast("SHARE LINK COPIED!");
         return;
-      } catch (error) {
-        console.warn("Clipboard API failed:", error);
+      } catch {
+        // Clipboard API failed, fall back to other methods
       }
     }
     
@@ -167,12 +167,10 @@ export function QRGenerator() {
       if (successful) {
         showToast("SHARE LINK COPIED!");
       } else {
-        showToast("COPY FAILED - CHECK CONSOLE");
-        console.log("Share URL:", shareUrl);
+        showToast("COPY FAILED - SHARE URL MANUALLY");
       }
     } catch {
-      showToast("COPY FAILED - CHECK CONSOLE");
-      console.log("Share URL:", shareUrl);
+      showToast("COPY FAILED - SHARE URL MANUALLY");
     }
   };
 

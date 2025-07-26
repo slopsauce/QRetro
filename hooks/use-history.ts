@@ -25,18 +25,22 @@ interface HistoryState {
 
 const HISTORY_STORAGE_KEY = "qretro-history";
 const DEFAULT_MAX_ITEMS = 20;
+const PREVIEW_MAX_LENGTH = 40;
 
 // Cached server snapshot to avoid infinite loops
 const serverSnapshot = { items: [], maxItems: DEFAULT_MAX_ITEMS };
 
+function generateId(): string {
+  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+}
+
 function createPreview(type: QRDataType, data: Record<string, string>): string {
-  const maxLength = 40;
   
   switch (type) {
     case "text":
-      return data.text?.substring(0, maxLength) || "";
+      return data.text?.substring(0, PREVIEW_MAX_LENGTH) || "";
     case "url":
-      return data.url?.substring(0, maxLength) || "";
+      return data.url?.substring(0, PREVIEW_MAX_LENGTH) || "";
     case "wifi":
       return `${data.ssid} (${data.security || "No security"})`;
     case "email":
@@ -85,7 +89,7 @@ const historyStore = {
       };
       return cachedSnapshot;
     } catch (error) {
-      console.warn("Failed to load history from localStorage:", error);
+      // Failed to load history from localStorage, use empty state
       cachedSnapshot = { items: [], maxItems: DEFAULT_MAX_ITEMS };
       return cachedSnapshot;
     }
@@ -135,7 +139,7 @@ const historyStore = {
         window.dispatchEvent(new CustomEvent("qretro-history-change"));
       }
     } catch (error) {
-      console.warn("Failed to save history to localStorage:", error);
+      // Failed to save history to localStorage, continue silently
     }
   }
 };
@@ -182,7 +186,7 @@ export function useHistory() {
     } else {
       // Create new item
       const item: HistoryItem = {
-        id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: generateId(),
         type,
         data: { ...data }, // Clone to avoid reference issues
         qrData,
@@ -234,21 +238,29 @@ export function useHistory() {
   }, [history.items]);
 
   const exportHistory = useCallback(() => {
-    const exportData = {
-      exportDate: new Date().toISOString(),
-      version: "1.0",
-      items: history.items,
-    };
-    
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], { 
-      type: "application/json" 
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `qretro-history-${new Date().toISOString().split('T')[0]}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
+    try {
+      const exportData = {
+        exportDate: new Date().toISOString(),
+        version: "1.0",
+        items: history.items,
+      };
+      
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { 
+        type: "application/json" 
+      });
+      const url = URL.createObjectURL(blob);
+      
+      try {
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `qretro-history-${new Date().toISOString().split('T')[0]}.json`;
+        link.click();
+      } finally {
+        URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      // Export failed silently
+    }
   }, [history.items]);
 
   return {
