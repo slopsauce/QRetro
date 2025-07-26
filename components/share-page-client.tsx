@@ -96,22 +96,6 @@ export function SharePageClient() {
             </Link>
           </div>
         </RetroFrame>
-        
-        {/* Footer */}
-        <div className="text-center mt-8 text-muted">
-          <p>
-            QRetro - MIT License - Made with 💚 by claude-code
-            {" • "}
-            <a 
-              href="https://github.com/slopsauce/QRetro" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-accent hover:text-foreground transition-colors underline"
-            >
-              [GitHub]
-            </a>
-          </p>
-        </div>
       </div>
     </main>
   );
