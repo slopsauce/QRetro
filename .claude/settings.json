@@ -15,7 +15,6 @@
       "Bash(ls:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)",
       "Bash(gh run list:*)",
       "Bash(gh run view:*)",
       "Bash(npm run build:*)",

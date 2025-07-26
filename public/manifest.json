@@ -2,7 +2,7 @@
   "name": "QRetro - Retro QR Code Generator",
   "short_name": "QRetro",
   "description": "Generate QR codes with a nostalgic terminal aesthetic",
-  "start_url": "/",
+  "start_url": "/QRetro/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#00ff00",
@@ -11,27 +11,45 @@
   "lang": "en-US",
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "/QRetro/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/QRetro/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
+    },
+    {
+      "src": "/QRetro/icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/QRetro/icon-167.png",
+      "sizes": "167x167",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/QRetro/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
     }
   ],
   "screenshots": [
     {
-      "src": "/screenshot-desktop.png",
+      "src": "/QRetro/screenshot-desktop.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide"
     },
     {
-      "src": "/screenshot-mobile.png",
+      "src": "/QRetro/screenshot-mobile.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow"

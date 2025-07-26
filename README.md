@@ -6,6 +6,24 @@ A retro-styled QR code generator with a terminal aesthetic. Generate QR codes fo
 
 ![MIT License](https://img.shields.io/badge/license-MIT-green.svg)
 
+## Screenshots
+
+<div align="center">
+  <img src="public/screenshot-desktop.png" alt="QRetro Dark Theme" width="600">
+  <br>
+  <em>Dark theme with classic terminal aesthetics</em>
+  <br><br>
+  <img src="public/screenshot-desktop-light.png" alt="QRetro Light Theme" width="600">
+  <br>
+  <em>Light theme with typewriter aesthetics</em>
+  <br><br>
+  <div>
+    <img src="public/screenshot-mobile.png" alt="QRetro Mobile Dark" width="200" style="margin-right: 20px">
+    <img src="public/screenshot-mobile-light.png" alt="QRetro Mobile Light" width="200">
+  </div>
+  <em>Responsive mobile design in both themes</em>
+</div>
+
 ## Features
 
 - 🎨 **Retro Terminal UI** - Clean borders, authentic phosphor green/amber colors with CRT scanlines
@@ -14,7 +32,7 @@ A retro-styled QR code generator with a terminal aesthetic. Generate QR codes fo
 - ⚙️ **Error Correction** - Configurable redundancy levels (L/M/Q/H)
 - 💾 **Download Options** - Save as PNG or SVG formats
 - 🔗 **Shareable Links** - Generate permanent URLs for your QR codes
-- 📱 **PWA Support** - Install as an app with offline functionality
+- 📱 **PWA Support** - Install as a standalone app on your device
 - ⚡ **Fast & Free** - No authentication required, instant generation
 - 📺 **CRT Effects** - Subtle monitor glow and horizontal scanlines for authentic retro feel
 
@@ -51,6 +69,29 @@ npm run dev
 2. Enter your data (text, URL, WiFi credentials, etc.)
 3. Customize the appearance (optional)
 4. Generate and download your QR code
+
+## PWA Installation
+
+QRetro can be installed as a Progressive Web App for quick access:
+
+### Desktop (Chrome/Edge)
+1. Visit [https://slopsauce.github.io/QRetro](https://slopsauce.github.io/QRetro)
+2. Click the install icon in the address bar (usually a ⊕ or computer icon)
+3. Click "Install" in the popup
+
+### Mobile (iOS)
+1. Open Safari and visit the app
+2. Tap the Share button (square with arrow)
+3. Scroll down and tap "Add to Home Screen"
+4. Tap "Add"
+
+### Mobile (Android)
+1. Open Chrome and visit the app
+2. Tap the menu (three dots)
+3. Tap "Add to Home screen" or "Install app"
+4. Tap "Install"
+
+Once installed, QRetro will appear as an app icon on your device and can be launched like any other application.
 
 ## Development
 
