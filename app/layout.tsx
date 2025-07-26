@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/providers";
+import { ThemeColor } from "@/components/theme-color";
 import "./globals.css";
 
 // Dark mode terminal font
@@ -47,6 +48,7 @@ export default function RootLayout({
           enableSystem={false}
           themes={["light", "dark"]}
         >
+          <ThemeColor />
           {children}
         </ThemeProvider>
       </body>
