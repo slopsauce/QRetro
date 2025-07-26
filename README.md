@@ -16,6 +16,12 @@ A retro-styled QR code generator with a terminal aesthetic. Generate QR codes fo
   <img src="public/screenshot-desktop-light.png" alt="QRetro Light Theme" width="600">
   <br>
   <em>Light theme with typewriter aesthetics</em>
+  <br><br>
+  <div>
+    <img src="public/screenshot-mobile.png" alt="QRetro Mobile Dark" width="200" style="margin-right: 20px">
+    <img src="public/screenshot-mobile-light.png" alt="QRetro Mobile Light" width="200">
+  </div>
+  <em>Responsive mobile design in both themes</em>
 </div>
 
 ## Features
