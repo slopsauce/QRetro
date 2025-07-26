@@ -181,5 +181,9 @@ npm run lint
 - ✅ Font loading commonly breaks due to path issues
 - ✅ Build output goes to `out/` directory for deployment
 
+## Claude Workflow Rules
+- **Always ask for user confirmation before git push operations**
+- Never push to GitHub without explicit approval
+
 ## Git & Workflow Reminders
 - Always check if you need to update the markdown files when committing
