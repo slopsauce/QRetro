@@ -40,14 +40,19 @@ QRetro is a retro-styled QR code generator with an authentic terminal/CRT aesthe
 - **Error Boundary**: React error boundary component for graceful crash handling with retro styling
 - **Optimization Focus**: Removed unnecessary React.memo - kept only essential improvements
 
-### Share Functionality & UX Improvements
+### Share Functionality & Privacy Improvements
+- **Privacy-First Share URLs**: Uses URL fragments (#) instead of query parameters (?)
+  - Data never sent to server - stays completely client-side
+  - Share URLs like `/share#type=text&data=example` instead of `/share?type=text&data=example`
+  - Protects sensitive data (WiFi passwords, contact info, crypto addresses)
+- **Share Page Security**: Enhanced share page with privacy and security messaging
+  - Clear privacy notice: "No tracking - your data stays private"
+  - Security warning: "Only scan QR codes from people you trust"
+  - Removed raw data display to prevent accidental exposure
 - **Toast Notifications**: Replaced ugly alert() with retro-styled toast component
   - Appears above share button with authentic terminal styling
   - Auto-dismisses after 3 seconds with smooth animations
   - Green accent color with checkmark for consistent theme
-- **Share URL Fixes**: Fixed broken share URLs missing basePath for GitHub Pages
-  - Production URLs correctly include `/QRetro` prefix
-  - Development URLs work without prefix
 - **Clipboard Fallback**: Improved clipboard copying with multiple fallback strategies
   - Modern clipboard API for secure contexts
   - Document.execCommand fallback for older browsers
@@ -104,9 +109,26 @@ npm run lint
 - **ThemeToggle**: Dark/light mode switcher
 - **ErrorBoundary**: Graceful error handling with retro crash screen
 - **ShareQRDisplay**: QR code display for share URLs
+- **HistoryPanel**: Privacy-first local history with collapsible interface
+- **SharePageClient**: Privacy-enhanced share page with security messaging
 - **Toast**: Retro-styled notification component for user feedback
 - **useToast**: Custom hook for toast notifications (3s auto-dismiss)
+- **useHistory**: Custom hook for local history management
 - **useDebounce**: Custom hook for input debouncing (500ms delay)
+
+## Privacy & Security Features
+
+### Privacy-First Design
+- **Local-Only Data Storage**: All QR history stored in browser localStorage, never transmitted to servers
+- **Fragment-Based Sharing**: Share URLs use fragments (#) instead of query parameters (?) to keep data client-side
+- **No Server Logging**: Sensitive data (WiFi passwords, contact info, crypto addresses) never appears in server logs
+- **Cross-Tab Sync**: History synchronization happens locally via storage events, not through external services
+- **Export Control**: Users can export their data as JSON files under their complete control
+
+### Security Education
+- **QR Code Safety**: Clear warnings about only scanning QR codes from trusted sources
+- **Privacy Messaging**: Prominent UI notices explaining local-only data storage
+- **No Raw Data Display**: Share pages don't expose sensitive data in plain text
 
 ## Development Notes
 - Static site generation compatible with GitHub Pages

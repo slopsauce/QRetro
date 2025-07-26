@@ -30,7 +30,14 @@
       "Bash(cp:*)",
       "mcp__github__search_repositories",
       "mcp__playwright__browser_network_requests",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(gh run:*)",
+      "Bash(gh pr view:*)",
+      "WebFetch(domain:docs.github.com)",
+      "mcp__context7__get-library-docs",
+      "mcp__github__get_pull_request",
+      "Bash(git pull:*)",
+      "Bash(git mv:*)"
     ],
     "deny": []
   }

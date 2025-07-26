@@ -8,6 +8,10 @@ import { RetroFrame } from "./retro-frame";
 import { cn } from "@/lib/utils";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useToast } from "./toast";
+import { useHistory, HistoryItem } from "@/hooks/use-history";
+import { HistoryPanel } from "./history-panel";
+import { useKeyboardShortcuts, useShortcutsHelp, KeyboardShortcut } from "@/hooks/use-keyboard-shortcuts";
+import { ShortcutsHelp } from "./shortcuts-help";
 
 interface QROptions {
   errorCorrectionLevel: "L" | "M" | "Q" | "H";
@@ -18,6 +22,8 @@ interface QROptions {
 export function QRGenerator() {
   const { theme } = useTheme();
   const { showToast, ToastComponent } = useToast();
+  const { addToHistory } = useHistory();
+  const { isVisible: showShortcuts, toggleHelp, hideHelp } = useShortcutsHelp();
   const [selectedType, setSelectedType] = useState<QRDataType>("text");
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [qrOptions, setQrOptions] = useState<QROptions>({
@@ -113,8 +119,12 @@ export function QRGenerator() {
 
   const handleDownload = (format: "png" | "svg") => {
     if (format === "png" && qrCode) {
+      // Auto-save to history before download (no toast)
+      handleSaveToHistory(false);
       downloadQRCode(qrCode, `qretro-${selectedType}.png`);
     } else if (format === "svg" && qrSvg) {
+      // Auto-save to history before download (no toast)
+      handleSaveToHistory(false);
       downloadQRCodeSVG(qrSvg, `qretro-${selectedType}.svg`);
     }
   };
@@ -122,9 +132,12 @@ export function QRGenerator() {
   const handleShare = async () => {
     if (!selectedTypeConfig) return;
     
+    // Auto-save to history before sharing (no toast)
+    handleSaveToHistory(false);
+    
     const qrData = generateQRData(selectedType, formData);
     const basePath = process.env.NODE_ENV === 'production' ? '/QRetro' : '';
-    const shareUrl = `${window.location.origin}${basePath}/share?type=${selectedType}&data=${encodeURIComponent(qrData)}`;
+    const shareUrl = `${window.location.origin}${basePath}/share#type=${selectedType}&data=${encodeURIComponent(qrData)}`;
     
     // Check if we're in a secure context and clipboard API is available
     if (navigator.clipboard && window.isSecureContext) {
@@ -132,8 +145,8 @@ export function QRGenerator() {
         await navigator.clipboard.writeText(shareUrl);
         showToast("SHARE LINK COPIED!");
         return;
-      } catch (error) {
-        console.warn("Clipboard API failed:", error);
+      } catch {
+        // Clipboard API failed, fall back to other methods
       }
     }
     
@@ -154,14 +167,103 @@ export function QRGenerator() {
       if (successful) {
         showToast("SHARE LINK COPIED!");
       } else {
-        showToast("COPY FAILED - CHECK CONSOLE");
-        console.log("Share URL:", shareUrl);
+        showToast("COPY FAILED - SHARE URL MANUALLY");
       }
     } catch {
-      showToast("COPY FAILED - CHECK CONSOLE");
-      console.log("Share URL:", shareUrl);
+      showToast("COPY FAILED - SHARE URL MANUALLY");
     }
   };
+
+  const handleSaveToHistory = (showToastMessage: boolean = true) => {
+    if (!selectedTypeConfig || !qrCode) return;
+    
+    const qrData = generateQRData(selectedType, formData);
+    if (!qrData) return;
+    
+    const historyId = addToHistory(selectedType, formData, qrData, qrOptions);
+    
+    if (showToastMessage) {
+      showToast("QR CODE SAVED TO HISTORY!");
+    }
+    
+    return historyId;
+  };
+
+  const handleLoadHistoryItem = (item: HistoryItem) => {
+    // Restore form data and type
+    setSelectedType(item.type);
+    setFormData(item.data);
+    
+    // Restore QR options if available
+    if (item.qrOptions) {
+      setQrOptions(item.qrOptions);
+    }
+    
+    setError("");
+    
+    // Show feedback to user
+    showToast("HISTORY ITEM LOADED!");
+    
+    // QR will regenerate automatically due to useEffect watching formData
+  };
+
+  // Define keyboard shortcuts
+  const shortcuts: KeyboardShortcut[] = [
+    {
+      key: "s",
+      ctrl: true,
+      description: "Save QR to history",
+      action: () => {
+        if (qrCode) {
+          handleSaveToHistory();
+        }
+      },
+    },
+    {
+      key: "d",
+      ctrl: true,
+      description: "Download PNG",
+      action: () => {
+        if (qrCode) {
+          handleDownload("png");
+        }
+      },
+    },
+    {
+      key: "e",
+      ctrl: true,
+      description: "Download SVG",
+      action: () => {
+        if (qrSvg) {
+          handleDownload("svg");
+        }
+      },
+    },
+    {
+      key: "c",
+      ctrl: true,
+      description: "Copy share link",
+      action: () => {
+        if (qrCode) {
+          handleShare();
+        }
+      },
+    },
+    {
+      key: "h",
+      ctrl: true,
+      description: "Show keyboard shortcuts",
+      action: toggleHelp,
+    },
+    {
+      key: "Escape",
+      description: "Close shortcuts help",
+      action: hideHelp,
+    },
+  ];
+
+  // Register keyboard shortcuts
+  useKeyboardShortcuts(shortcuts);
 
   return (
     <div className="crt min-h-screen p-6">
@@ -258,7 +360,7 @@ export function QRGenerator() {
           </div>
 
           {/* Output Panel */}
-          <div>
+          <div className="space-y-4">
             <RetroFrame title="QR CODE OUTPUT">
               <div className="text-center">
                 {isGenerating ? (
@@ -304,6 +406,12 @@ export function QRGenerator() {
                         </button>
                         <ToastComponent />
                       </div>
+                      <button
+                        onClick={() => handleSaveToHistory()}
+                        className="px-3 py-2 border-2 border-secondary text-secondary hover:bg-secondary hover:text-background transition-colors text-sm"
+                      >
+                        [SAVE]
+                      </button>
                     </div>
                   </div>
                 ) : (
@@ -313,14 +421,30 @@ export function QRGenerator() {
                 )}
               </div>
             </RetroFrame>
+            
+            {/* History Panel */}
+            <HistoryPanel onLoadItem={handleLoadHistoryItem} />
           </div>
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-8 text-muted">
+        <div className="text-center mt-8 text-muted space-y-2">
           <p>QRetro - MIT License - Made with 💚 by claude-code</p>
+          <button
+            onClick={toggleHelp}
+            className="text-accent hover:text-foreground transition-colors text-sm"
+          >
+            [Ctrl+H] Show Keyboard Shortcuts
+          </button>
         </div>
       </div>
+
+      {/* Keyboard Shortcuts Help Overlay */}
+      <ShortcutsHelp 
+        shortcuts={shortcuts} 
+        isVisible={showShortcuts} 
+        onClose={hideHelp} 
+      />
     </div>
   );
 }
