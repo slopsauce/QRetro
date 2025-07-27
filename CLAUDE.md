@@ -68,7 +68,8 @@ QRetro is a retro-styled QR code generator with an authentic terminal/CRT aesthe
 ### Offline PWA Support Implementation
 - **Service Worker**: Comprehensive caching with cache-first strategy for static assets
   - `/public/sw.js` - Complete offline functionality with cache management
-  - Cache versioning and cleanup for optimal performance
+  - **Automated Cache Versioning**: Build-time injection of git hash + timestamp for unique cache versions
+  - Cache cleanup and size management for optimal performance
   - Background sync capabilities for future enhancements
 - **Service Worker Registration**: Auto-registration in production with update notifications
   - `components/service-worker-register.tsx` - Handles SW lifecycle and user notifications
@@ -86,8 +87,11 @@ QRetro is a retro-styled QR code generator with an authentic terminal/CRT aesthe
 # Development
 npm run dev
 
-# Production build  
+# Production build (includes service worker version injection)
 npm run build
+
+# Production build without version injection (for debugging)
+npm run build:base
 
 # Linting
 npm run lint

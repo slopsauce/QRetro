@@ -1,9 +1,8 @@
 // QRetro Service Worker - Offline PWA Support
 // Cache-first strategy for all static assets and offline functionality
 
-// Cache version - manually updated for deployments
-// In production, this should be replaced with actual build hash or version
-const BUILD_VERSION = 'v1.0.0-offline-pwa';
+// Cache version - replaced during build process with actual build hash
+const BUILD_VERSION = '__BUILD_VERSION__';
 const CACHE_NAME = `qretro-v${BUILD_VERSION}`;
 const STATIC_CACHE = `qretro-static-v${BUILD_VERSION}`;
 const DYNAMIC_CACHE = `qretro-dynamic-v${BUILD_VERSION}`;
