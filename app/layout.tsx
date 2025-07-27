@@ -29,10 +29,10 @@ export const metadata: Metadata = {
   manifest: process.env.NODE_ENV === 'production' ? "/QRetro/manifest.json" : "/manifest.json",
   icons: {
     icon: [
-      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+      { url: process.env.NODE_ENV === 'production' ? '/QRetro/icon-192.png' : '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: process.env.NODE_ENV === 'production' ? '/QRetro/icon-512.png' : '/icon-512.png', sizes: '512x512', type: 'image/png' },
     ],
-    apple: { url: '/icon-180.png', sizes: '180x180', type: 'image/png' },
+    apple: { url: process.env.NODE_ENV === 'production' ? '/QRetro/icon-180.png' : '/icon-180.png', sizes: '180x180', type: 'image/png' },
   },
   openGraph: {
     title: "QRetro - Retro QR Code Generator",
