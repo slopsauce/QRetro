@@ -1,79 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-
-const showUpdateNotification = () => {
-  // Create a simple notification for updates
-  const notification = document.createElement("div");
-  notification.innerHTML = `
-    <div style="
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: var(--color-accent);
-      color: var(--color-background);
-      padding: 12px 16px;
-      border: 2px solid currentColor;
-      font-family: var(--font-pixel), monospace;
-      font-size: 14px;
-      z-index: 9999;
-      max-width: 300px;
-      cursor: pointer;
-    ">
-      ⚡ NEW VERSION AVAILABLE<br>
-      <small>Click to update and reload</small>
-    </div>
-  `;
-  
-  notification.onclick = () => {
-    // Tell the service worker to skip waiting
-    if (navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({ type: "SKIP_WAITING" });
-    }
-    notification.remove();
-  };
-  
-  document.body.appendChild(notification);
-  
-  // Auto-remove after 10 seconds
-  setTimeout(() => {
-    if (notification.parentNode) {
-      notification.remove();
-    }
-  }, 10000);
-};
-
-const showOfflineCapabilityNotification = () => {
-  // Create a notification for offline capability
-  const notification = document.createElement("div");
-  notification.innerHTML = `
-    <div style="
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: var(--color-secondary);
-      color: var(--color-background);
-      padding: 12px 16px;
-      border: 2px solid currentColor;
-      font-family: var(--font-pixel), monospace;
-      font-size: 14px;
-      z-index: 9999;
-      max-width: 300px;
-    ">
-      📱 APP READY FOR OFFLINE USE<br>
-      <small>QRetro now works without internet!</small>
-    </div>
-  `;
-  
-  document.body.appendChild(notification);
-  
-  // Auto-remove after 5 seconds
-  setTimeout(() => {
-    if (notification.parentNode) {
-      notification.remove();
-    }
-  }, 5000);
-};
+import { showUpdateNotification, showCacheStatusNotification } from "./notification-utils";
 
 const registerServiceWorker = async () => {
   try {
@@ -103,7 +31,7 @@ const registerServiceWorker = async () => {
             } else {
               // Content is cached for the first time
               console.log("[SW] Content is cached for offline use.");
-              showOfflineCapabilityNotification();
+              showCacheStatusNotification('ready');
             }
           }
         });
@@ -123,6 +51,12 @@ const registerServiceWorker = async () => {
 
   } catch (error) {
     console.error("[SW] Service worker registration failed:", error);
+    
+    // Show user-friendly error notification
+    showCacheStatusNotification('error');
+    
+    // Try to provide fallback functionality
+    console.log("[SW] App will continue to work but without offline support");
   }
 };
 

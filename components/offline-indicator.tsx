@@ -11,16 +11,32 @@ export function OfflineIndicator() {
     // Set initial state
     setIsOnline(navigator.onLine);
 
+    let onlineTimer: NodeJS.Timeout | null = null;
+
     const handleOnline = () => {
       setIsOnline(true);
       setShowIndicator(true);
+      
+      // Clear any existing timer
+      if (onlineTimer) {
+        clearTimeout(onlineTimer);
+      }
+      
       // Hide "back online" indicator after 3 seconds
-      setTimeout(() => setShowIndicator(false), 3000);
+      onlineTimer = setTimeout(() => {
+        setShowIndicator(false);
+      }, 3000);
     };
 
     const handleOffline = () => {
       setIsOnline(false);
       setShowIndicator(true);
+      
+      // Clear online timer when going offline
+      if (onlineTimer) {
+        clearTimeout(onlineTimer);
+        onlineTimer = null;
+      }
       // Keep offline indicator visible
     };
 
@@ -28,10 +44,15 @@ export function OfflineIndicator() {
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
-    // Cleanup
+    // Cleanup function to prevent race conditions
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
+      
+      // Clear any pending timers
+      if (onlineTimer) {
+        clearTimeout(onlineTimer);
+      }
     };
   }, []);
 
@@ -48,15 +69,19 @@ export function OfflineIndicator() {
           ? "bg-secondary text-background border-secondary animate-pulse"
           : "bg-accent text-background border-accent"
       )}
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      aria-label={isOnline ? "Connection restored" : "Working offline"}
     >
       {isOnline ? (
         <div className="flex items-center gap-2">
-          <span className="text-background">🌐</span>
+          <span className="text-background" aria-hidden="true">🌐</span>
           <span>BACK ONLINE</span>
         </div>
       ) : (
         <div className="flex items-center gap-2">
-          <span className="text-background">📱</span>
+          <span className="text-background" aria-hidden="true">📱</span>
           <span>OFFLINE MODE - QR GENERATION STILL WORKS</span>
         </div>
       )}

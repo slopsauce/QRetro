@@ -12,6 +12,7 @@ import { useHistory, HistoryItem } from "@/hooks/use-history";
 import { HistoryPanel } from "./history-panel";
 import { useKeyboardShortcuts, useShortcutsHelp, KeyboardShortcut } from "@/hooks/use-keyboard-shortcuts";
 import { ShortcutsHelp } from "./shortcuts-help";
+import { CacheStatus } from "./cache-status";
 
 interface QROptions {
   errorCorrectionLevel: "L" | "M" | "Q" | "H";
@@ -459,6 +460,7 @@ export function QRGenerator() {
           <p className="text-xs">
             📱 Works offline • 💾 Local storage • 🔒 Privacy-first
           </p>
+          <CacheStatus />
           <button
             onClick={toggleHelp}
             className="text-accent hover:text-foreground transition-colors text-sm"

@@ -1,20 +1,21 @@
 // QRetro Service Worker - Offline PWA Support
 // Cache-first strategy for all static assets and offline functionality
 
-const CACHE_NAME = 'qretro-v1.0.0';
-const STATIC_CACHE = 'qretro-static-v1.0.0';
-const DYNAMIC_CACHE = 'qretro-dynamic-v1.0.0';
+// Generate cache version based on timestamp to ensure proper invalidation
+const BUILD_VERSION = new Date().getTime().toString();
+const CACHE_NAME = `qretro-v${BUILD_VERSION}`;
+const STATIC_CACHE = `qretro-static-v${BUILD_VERSION}`;
+const DYNAMIC_CACHE = `qretro-dynamic-v${BUILD_VERSION}`;
 
-// Files to cache on install
-const STATIC_FILES = [
+// Cache size limits
+const MAX_STATIC_CACHE_SIZE = 50;
+const MAX_DYNAMIC_CACHE_SIZE = 100;
+
+// Essential files to cache immediately (critical for app to work)
+const ESSENTIAL_FILES = [
   // Core app files
   '/QRetro/',
   '/QRetro/index.html',
-  '/QRetro/_next/static/css/app/layout.css',
-  '/QRetro/_next/static/chunks/webpack.js',
-  '/QRetro/_next/static/chunks/main-app.js',
-  '/QRetro/_next/static/chunks/app/layout.js',
-  '/QRetro/_next/static/chunks/app/page.js',
   
   // Fonts (critical for retro aesthetic)
   '/QRetro/fonts/PixelOperatorMonoHB.ttf',
@@ -35,7 +36,30 @@ const STATIC_FILES = [
   '/QRetro/share/index.html'
 ];
 
-// Install event - Cache static files
+// Discover and cache dynamic assets (Next.js chunks, CSS, etc.)
+async function discoverAndCacheAssets() {
+  try {
+    const response = await fetch('/QRetro/');
+    const html = await response.text();
+    
+    // Extract CSS and JS paths from HTML
+    const cssMatches = html.match(/href=["']([^"']*\.css)["']/g) || [];
+    const jsMatches = html.match(/src=["']([^"']*\.js)["']/g) || [];
+    
+    const dynamicAssets = [
+      ...cssMatches.map(match => match.match(/href=["']([^"']*)["']/)[1]),
+      ...jsMatches.map(match => match.match(/src=["']([^"']*)["']/)[1])
+    ].filter(asset => asset.startsWith('/QRetro/'));
+    
+    console.log('[Service Worker] Discovered dynamic assets:', dynamicAssets);
+    return dynamicAssets;
+  } catch (error) {
+    console.warn('[Service Worker] Failed to discover dynamic assets:', error);
+    return [];
+  }
+}
+
+// Install event - Cache essential and dynamic files
 self.addEventListener('install', (event) => {
   console.log('[Service Worker] Installing...');
   
@@ -43,10 +67,10 @@ self.addEventListener('install', (event) => {
     (async () => {
       try {
         const staticCache = await caches.open(STATIC_CACHE);
-        console.log('[Service Worker] Caching static files...');
+        console.log('[Service Worker] Caching essential files...');
         
-        // Cache static files with error handling for each file
-        const cachePromises = STATIC_FILES.map(async (file) => {
+        // Cache essential files first
+        const essentialPromises = ESSENTIAL_FILES.map(async (file) => {
           try {
             const response = await fetch(file);
             if (response.ok) {
@@ -60,8 +84,31 @@ self.addEventListener('install', (event) => {
           }
         });
         
-        await Promise.allSettled(cachePromises);
-        console.log('[Service Worker] Static files cached successfully');
+        await Promise.allSettled(essentialPromises);
+        
+        // Discover and cache dynamic assets
+        const dynamicAssets = await discoverAndCacheAssets();
+        const dynamicPromises = dynamicAssets.map(async (asset) => {
+          try {
+            const response = await fetch(asset);
+            if (response.ok) {
+              await staticCache.put(asset, response);
+              console.log(`[Service Worker] Cached dynamic asset: ${asset}`);
+            }
+          } catch (error) {
+            console.warn(`[Service Worker] Error caching dynamic asset ${asset}:`, error);
+          }
+        });
+        
+        await Promise.allSettled(dynamicPromises);
+        console.log('[Service Worker] All files cached successfully');
+        
+        // Notify clients about cache update
+        self.clients.matchAll().then(clients => {
+          clients.forEach(client => {
+            client.postMessage({ type: 'CACHE_UPDATED' });
+          });
+        });
         
         // Skip waiting to activate immediately
         self.skipWaiting();
@@ -267,6 +314,27 @@ self.addEventListener('message', (event) => {
   }
 });
 
+// Cache size management
+async function manageCacheSize(cacheName, maxSize) {
+  try {
+    const cache = await caches.open(cacheName);
+    const keys = await cache.keys();
+    
+    if (keys.length > maxSize) {
+      console.log(`[Service Worker] Cache ${cacheName} size (${keys.length}) exceeds limit (${maxSize}), cleaning up...`);
+      
+      // Remove oldest entries (simple FIFO approach)
+      const entriesToDelete = keys.length - maxSize;
+      for (let i = 0; i < entriesToDelete; i++) {
+        await cache.delete(keys[i]);
+        console.log(`[Service Worker] Removed old cache entry: ${keys[i].url}`);
+      }
+    }
+  } catch (error) {
+    console.warn(`[Service Worker] Failed to manage cache size for ${cacheName}:`, error);
+  }
+}
+
 // Cache QR code data for offline access
 async function cacheQRCode(qrData) {
   try {
@@ -276,6 +344,9 @@ async function cacheQRCode(qrData) {
     });
     await cache.put(`/qr-cache/${qrData.id}`, response);
     console.log('[Service Worker] QR code cached for offline access');
+    
+    // Manage cache size after adding new entry
+    await manageCacheSize(DYNAMIC_CACHE, MAX_DYNAMIC_CACHE_SIZE);
   } catch (error) {
     console.warn('[Service Worker] Failed to cache QR code:', error);
   }
