@@ -105,7 +105,6 @@ QRetro works completely offline after the first visit:
 - ✅ **Theme Switching** - Dark/light themes cached locally
 - ✅ **Share Links** - Generate and copy share URLs to clipboard offline
 - ⚠️ **Accessing Shared URLs** - Requires internet to visit shared links from other devices
-- ⚠️ **GitHub Link** - External link requires internet connection
 
 The app automatically detects your connection status and gracefully handles offline scenarios.
 
