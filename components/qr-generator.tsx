@@ -139,17 +139,12 @@ export function QRGenerator() {
     const basePath = process.env.NODE_ENV === 'production' ? '/QRetro' : '';
     const shareUrl = `${window.location.origin}${basePath}/share#type=${selectedType}&data=${encodeURIComponent(qrData)}`;
     
-    // Check if we're offline
-    if (!navigator.onLine) {
-      showToast("OFFLINE - QR SAVED TO HISTORY");
-      return;
-    }
-    
     // Check if we're in a secure context and clipboard API is available
     if (navigator.clipboard && window.isSecureContext) {
       try {
         await navigator.clipboard.writeText(shareUrl);
-        showToast("SHARE LINK COPIED!");
+        const offlineNote = !navigator.onLine ? " (WORKS OFFLINE)" : "";
+        showToast(`SHARE LINK COPIED!${offlineNote}`);
         
         // Cache the QR code for offline access via service worker
         if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
@@ -184,7 +179,8 @@ export function QRGenerator() {
       document.body.removeChild(textArea);
       
       if (successful) {
-        showToast("SHARE LINK COPIED!");
+        const offlineNote = !navigator.onLine ? " (WORKS OFFLINE)" : "";
+        showToast(`SHARE LINK COPIED!${offlineNote}`);
       } else {
         showToast("COPY FAILED - QR SAVED TO HISTORY");
       }
