@@ -62,13 +62,19 @@ const registerServiceWorker = async () => {
 
 export function ServiceWorkerRegister() {
   useEffect(() => {
-    // Only register service worker in production and if supported
+    // Register service worker in production or when explicitly enabled in development
+    const enableSW = process.env.NODE_ENV === "production" || 
+                     process.env.NEXT_PUBLIC_SW_DEV === "true";
+    
     if (
       typeof window !== "undefined" &&
       "serviceWorker" in navigator &&
-      process.env.NODE_ENV === "production"
+      enableSW
     ) {
+      console.log(`[SW] Service Worker enabled (${process.env.NODE_ENV} mode)`);
       registerServiceWorker();
+    } else if (process.env.NODE_ENV === "development") {
+      console.log("[SW] Service Worker disabled in development. Set NEXT_PUBLIC_SW_DEV=true to enable.");
     }
   }, []);
 

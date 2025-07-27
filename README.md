@@ -114,6 +114,9 @@ The app automatically detects your connection status and gracefully handles offl
 # Run development server
 npm run dev
 
+# Test offline functionality in development (optional)
+NEXT_PUBLIC_SW_DEV=true npm run dev
+
 # Build for production
 npm run build
 

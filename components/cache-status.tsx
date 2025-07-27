@@ -43,14 +43,53 @@ export function CacheStatus() {
       let totalSize = 0;
       let hasContent = false;
       
-      for (const cacheName of qretroCaches) {
-        const cache = await caches.open(cacheName);
-        const keys = await cache.keys();
-        
-        if (keys.length > 0) {
-          hasContent = true;
-          // Estimate size (rough calculation)
-          totalSize += keys.length * 1024; // Approximate 1KB per cached item
+      // Try to get accurate storage usage first
+      if ('storage' in navigator && 'estimate' in navigator.storage) {
+        try {
+          const estimate = await navigator.storage.estimate();
+          if (estimate.usage) {
+            totalSize = estimate.usage;
+            hasContent = qretroCaches.length > 0;
+          }
+        } catch (storageError) {
+          console.warn('[Cache Status] Storage API failed, using fallback:', storageError);
+        }
+      }
+      
+      // Fallback: estimate based on cache entries if Storage API unavailable
+      if (totalSize === 0) {
+        for (const cacheName of qretroCaches) {
+          const cache = await caches.open(cacheName);
+          const keys = await cache.keys();
+          
+          if (keys.length > 0) {
+            hasContent = true;
+            
+            // Better estimation: sample a few responses to get average size
+            const sampleSize = Math.min(keys.length, 3);
+            let averageSize = 0;
+            
+            for (let i = 0; i < sampleSize; i++) {
+              try {
+                const response = await cache.match(keys[i]);
+                if (response) {
+                  const blob = await response.blob();
+                  averageSize += blob.size;
+                }
+              } catch (sampleError) {
+                // Ignore individual sample errors
+                console.warn('[Cache Status] Sample error:', sampleError);
+              }
+            }
+            
+            if (averageSize > 0) {
+              const estimatedAverageSize = averageSize / sampleSize;
+              totalSize += keys.length * estimatedAverageSize;
+            } else {
+              // Last resort: rough estimate
+              totalSize += keys.length * 50 * 1024; // 50KB average per file
+            }
+          }
         }
       }
 
