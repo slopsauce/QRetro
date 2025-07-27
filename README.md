@@ -33,7 +33,9 @@ A retro-styled QR code generator with a terminal aesthetic. Generate QR codes fo
 - 💾 **Download Options** - Save as PNG or SVG formats
 - 🔗 **Shareable Links** - Generate permanent URLs for your QR codes
 - 📱 **PWA Support** - Install as a standalone app on your device
+- 🌐 **Offline Support** - Full functionality without internet connection
 - ⚡ **Fast & Free** - No authentication required, instant generation
+- 💾 **Local Storage** - History and settings stored locally for privacy
 - 📺 **CRT Effects** - Subtle monitor glow and horizontal scanlines for authentic retro feel
 
 ## Getting Started
@@ -92,6 +94,19 @@ QRetro can be installed as a Progressive Web App for quick access:
 4. Tap "Install"
 
 Once installed, QRetro will appear as an app icon on your device and can be launched like any other application.
+
+### Offline Functionality
+
+QRetro works completely offline after the first visit:
+
+- ✅ **QR Code Generation** - All QR types work without internet
+- ✅ **History & Settings** - Stored locally, synced across tabs
+- ✅ **Download QR Codes** - PNG and SVG downloads work offline
+- ✅ **Theme Switching** - Dark/light themes cached locally
+- ⚠️ **Share Links** - Requires internet for clipboard; saves to history when offline
+- ⚠️ **GitHub Link** - External link requires internet connection
+
+The app automatically detects your connection status and gracefully handles offline scenarios.
 
 ## Development
 

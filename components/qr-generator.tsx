@@ -139,11 +139,30 @@ export function QRGenerator() {
     const basePath = process.env.NODE_ENV === 'production' ? '/QRetro' : '';
     const shareUrl = `${window.location.origin}${basePath}/share#type=${selectedType}&data=${encodeURIComponent(qrData)}`;
     
+    // Check if we're offline
+    if (!navigator.onLine) {
+      showToast("OFFLINE - QR SAVED TO HISTORY");
+      return;
+    }
+    
     // Check if we're in a secure context and clipboard API is available
     if (navigator.clipboard && window.isSecureContext) {
       try {
         await navigator.clipboard.writeText(shareUrl);
         showToast("SHARE LINK COPIED!");
+        
+        // Cache the QR code for offline access via service worker
+        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({
+            type: 'CACHE_QR_CODE',
+            qrData: {
+              id: `${selectedType}-${Date.now()}`,
+              dataUrl: qrCode,
+              type: selectedType,
+              data: formData
+            }
+          });
+        }
         return;
       } catch {
         // Clipboard API failed, fall back to other methods
@@ -167,10 +186,10 @@ export function QRGenerator() {
       if (successful) {
         showToast("SHARE LINK COPIED!");
       } else {
-        showToast("COPY FAILED - SHARE URL MANUALLY");
+        showToast("COPY FAILED - QR SAVED TO HISTORY");
       }
     } catch {
-      showToast("COPY FAILED - SHARE URL MANUALLY");
+      showToast("COPY FAILED - QR SAVED TO HISTORY");
     }
   };
 
@@ -440,6 +459,9 @@ export function QRGenerator() {
             >
               [GitHub]
             </a>
+          </p>
+          <p className="text-xs">
+            📱 Works offline • 💾 Local storage • 🔒 Privacy-first
           </p>
           <button
             onClick={toggleHelp}
