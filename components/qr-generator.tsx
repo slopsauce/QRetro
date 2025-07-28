@@ -40,6 +40,7 @@ export function QRGenerator() {
   const [qrSvg, setQrSvg] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string>("");
+  const [statusMessage, setStatusMessage] = useState<string>("");
 
   const selectedTypeConfig = QR_TYPES.find(t => t.type === selectedType);
 
@@ -53,11 +54,13 @@ export function QRGenerator() {
 
     if (missingFields.length > 0) {
       setError(`Required fields: ${missingFields.join(", ")}`);
+      setStatusMessage("");
       return;
     }
 
     setIsGenerating(true);
     setError("");
+    setStatusMessage("Generating QR code...");
 
     try {
       const qrData = generateQRData(selectedType, debouncedFormData);
@@ -85,8 +88,14 @@ export function QRGenerator() {
 
       setQrCode(pngDataUrl);
       setQrSvg(svg);
+      setStatusMessage("QR code generated successfully");
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setStatusMessage(""), 3000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to generate QR code");
+      const errorMsg = err instanceof Error ? err.message : "Failed to generate QR code";
+      setError(errorMsg);
+      setStatusMessage("");
     } finally {
       setIsGenerating(false);
     }
@@ -116,6 +125,7 @@ export function QRGenerator() {
     setQrCode("");
     setQrSvg("");
     setError("");
+    setStatusMessage("");
   };
 
   const handleDownload = (format: "png" | "svg") => {
@@ -283,24 +293,48 @@ export function QRGenerator() {
 
   return (
     <div className="crt min-h-screen p-6 flex flex-col">
-      <div className="max-w-7xl mx-auto flex-1 w-full">
+      {/* Status Announcements - Screen reader only */}
+      <div className="sr-only">
+        {statusMessage && (
+          <div role="status" aria-live="polite">
+            {statusMessage}
+          </div>
+        )}
+        {error && (
+          <div role="alert" aria-live="assertive">
+            {error}
+          </div>
+        )}
+      </div>
+
+      <main className="max-w-7xl mx-auto flex-1 w-full">
         {/* Header */}
-        <div className="text-center mb-8">
+        <header className="text-center mb-8">
           <h1 className="text-4xl font-bold glow mb-2">
             QRETRO<span className="cursor">█</span>
           </h1>
           <p className="text-muted">RETRO QR CODE GENERATOR</p>
-        </div>
+        </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Input Panel */}
           <div className="space-y-4">
             {/* Type Selection */}
             <RetroFrame title="SELECT TYPE">
-              <div className="grid grid-cols-2 gap-2">
+              <div 
+                role="radiogroup" 
+                aria-labelledby="type-selection-heading"
+                className="grid grid-cols-2 gap-2"
+              >
+                <span id="type-selection-heading" className="sr-only">
+                  Select QR code type
+                </span>
                 {QR_TYPES.map((type) => (
                   <button
                     key={type.type}
+                    role="radio"
+                    aria-checked={selectedType === type.type}
+                    aria-describedby={`${type.type}-description`}
                     onClick={() => handleTypeChange(type.type)}
                     className={cn(
                       "p-3 border-2 text-left transition-colors",
@@ -310,7 +344,9 @@ export function QRGenerator() {
                     )}
                   >
                     <div className="font-bold">{type.icon} {type.label}</div>
-                    <div className="text-sm text-muted">{type.description}</div>
+                    <div id={`${type.type}-description`} className="text-sm text-muted">
+                      {type.description}
+                    </div>
                   </button>
                 ))}
               </div>
@@ -322,14 +358,26 @@ export function QRGenerator() {
                 <div className="space-y-4">
                   {selectedTypeConfig.fields.map((field) => (
                     <div key={field.name}>
-                      <label className="block text-sm font-bold mb-1">
+                      <label 
+                        htmlFor={`input-${field.name}`}
+                        className="block text-sm font-bold mb-1"
+                      >
                         {field.label}
-                        {field.required && <span className="text-accent">*</span>}
+                        {field.required && <span className="text-accent" aria-label="required">*</span>}
                       </label>
+                      {field.placeholder && (
+                        <div id={`${field.name}-help`} className="sr-only">
+                          {field.placeholder}
+                        </div>
+                      )}
                       {field.type === "select" ? (
                         <select
+                          id={`input-${field.name}`}
                           value={formData[field.name] || ""}
                           onChange={(e) => handleInputChange(field.name, e.target.value)}
+                          aria-required={field.required}
+                          aria-invalid={error && !formData[field.name] && field.required ? "true" : "false"}
+                          aria-describedby={field.placeholder ? `${field.name}-help` : undefined}
                           className="w-full p-2 bg-background border-2 border-current text-foreground"
                         >
                           <option value="">Select {field.label}</option>
@@ -341,10 +389,14 @@ export function QRGenerator() {
                         </select>
                       ) : (
                         <input
+                          id={`input-${field.name}`}
                           type={field.type}
                           value={formData[field.name] || ""}
                           onChange={(e) => handleInputChange(field.name, e.target.value)}
                           placeholder={field.placeholder}
+                          aria-required={field.required}
+                          aria-invalid={error && !formData[field.name] && field.required ? "true" : "false"}
+                          aria-describedby={field.placeholder ? `${field.name}-help` : undefined}
                           className="w-full p-2 bg-background border-2 border-current text-foreground placeholder:text-muted"
                         />
                       )}
@@ -353,12 +405,17 @@ export function QRGenerator() {
                   
                   {/* Error Correction Level */}
                   <div className="mt-4 pt-4 border-t border-muted">
-                    <label className="block text-sm font-bold mb-2">
+                    <label 
+                      htmlFor="error-correction-level"
+                      className="block text-sm font-bold mb-2"
+                    >
                       Error Correction Level
                     </label>
                     <select
+                      id="error-correction-level"
                       value={qrOptions.errorCorrectionLevel}
                       onChange={(e) => setQrOptions(prev => ({ ...prev, errorCorrectionLevel: e.target.value as "L" | "M" | "Q" | "H" }))}
+                      aria-describedby="error-correction-help"
                       className="w-full p-2 bg-background border-2 border-current text-foreground"
                     >
                       <option value="L">L - Low (~7% recovery)</option>
@@ -366,7 +423,7 @@ export function QRGenerator() {
                       <option value="Q">Q - Quartile (~25% recovery)</option>
                       <option value="H">H - High (~30% recovery)</option>
                     </select>
-                    <div className="text-xs text-muted mt-1">
+                    <div id="error-correction-help" className="text-xs text-muted mt-1">
                       Higher levels allow recovery from more damage but create larger QR codes
                     </div>
                   </div>
@@ -381,13 +438,15 @@ export function QRGenerator() {
               <div className="text-center">
                 {isGenerating ? (
                   <div className="py-20">
-                    <div className="text-accent">GENERATING QR CODE...</div>
+                    <div className="text-accent" role="status" aria-live="polite">
+                      GENERATING QR CODE...
+                    </div>
                     <div className="mt-2">
                       <span className="cursor">█</span>
                     </div>
                   </div>
                 ) : error ? (
-                  <div className="py-20 text-accent">
+                  <div className="py-20 text-accent" role="alert" aria-live="assertive">
                     ERROR: {error}
                   </div>
                 ) : qrCode ? (
@@ -396,19 +455,21 @@ export function QRGenerator() {
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={qrCode}
-                        alt="Generated QR Code"
+                        alt={`Generated QR Code for ${selectedTypeConfig?.label || selectedType}`}
                         className="border-2 border-current"
                       />
                     </div>
                     <div className="flex gap-2 justify-center flex-wrap">
                       <button
                         onClick={() => handleDownload("png")}
+                        aria-label={`Download QR code as PNG image for ${selectedTypeConfig?.label || selectedType}`}
                         className="px-3 py-2 border-2 border-current hover:bg-foreground hover:text-background transition-colors text-sm"
                       >
                         [PNG]
                       </button>
                       <button
                         onClick={() => handleDownload("svg")}
+                        aria-label={`Download QR code as SVG vector for ${selectedTypeConfig?.label || selectedType}`}
                         className="px-3 py-2 border-2 border-current hover:bg-foreground hover:text-background transition-colors text-sm"
                       >
                         [SVG]
@@ -416,6 +477,7 @@ export function QRGenerator() {
                       <div className="relative">
                         <button
                           onClick={handleShare}
+                          aria-label={`Copy share link for ${selectedTypeConfig?.label || selectedType} QR code`}
                           className="px-3 py-2 border-2 border-accent text-accent hover:bg-accent hover:text-background transition-colors text-sm"
                         >
                           [SHARE]
@@ -424,6 +486,7 @@ export function QRGenerator() {
                       </div>
                       <button
                         onClick={() => handleSaveToHistory()}
+                        aria-label={`Save ${selectedTypeConfig?.label || selectedType} QR code to local history`}
                         className="px-3 py-2 border-2 border-secondary text-secondary hover:bg-secondary hover:text-background transition-colors text-sm"
                       >
                         [SAVE]
@@ -431,7 +494,7 @@ export function QRGenerator() {
                     </div>
                   </div>
                 ) : (
-                  <div className="py-20 text-muted">
+                  <div className="py-20 text-muted" role="status" aria-live="polite">
                     Enter data to generate QR code
                   </div>
                 )}
@@ -442,7 +505,7 @@ export function QRGenerator() {
             <HistoryPanel onLoadItem={handleLoadHistoryItem} />
           </div>
         </div>
-      </div>
+      </main>
 
       {/* Footer - Outside flex-1 container */}
       <footer className="mt-12 max-w-7xl mx-auto w-full">

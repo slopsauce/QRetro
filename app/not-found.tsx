@@ -3,7 +3,7 @@ import { RetroFrame } from "@/components/retro-frame";
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen flex items-center justify-center p-8">
+    <div className="min-h-screen flex items-center justify-center p-8">
       <RetroFrame className="max-w-md">
         <div className="text-center space-y-4">
           <div className="text-6xl font-bold glow mb-4">404</div>
@@ -23,6 +23,6 @@ export default function NotFound() {
           </Link>
         </div>
       </RetroFrame>
-    </main>
+    </div>
   );
 }
