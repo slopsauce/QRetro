@@ -12,6 +12,7 @@ import { useHistory, HistoryItem } from "@/hooks/use-history";
 import { HistoryPanel } from "./history-panel";
 import { useKeyboardShortcuts, useShortcutsHelp, KeyboardShortcut } from "@/hooks/use-keyboard-shortcuts";
 import { ShortcutsHelp } from "./shortcuts-help";
+import { CacheStatus } from "./cache-status";
 
 interface QROptions {
   errorCorrectionLevel: "L" | "M" | "Q" | "H";
@@ -143,7 +144,21 @@ export function QRGenerator() {
     if (navigator.clipboard && window.isSecureContext) {
       try {
         await navigator.clipboard.writeText(shareUrl);
-        showToast("SHARE LINK COPIED!");
+        const offlineNote = !navigator.onLine ? " (WORKS OFFLINE)" : "";
+        showToast(`SHARE LINK COPIED!${offlineNote}`);
+        
+        // Cache the QR code for offline access via service worker
+        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({
+            type: 'CACHE_QR_CODE',
+            qrData: {
+              id: `${selectedType}-${Date.now()}`,
+              dataUrl: qrCode,
+              type: selectedType,
+              data: formData
+            }
+          });
+        }
         return;
       } catch {
         // Clipboard API failed, fall back to other methods
@@ -165,12 +180,13 @@ export function QRGenerator() {
       document.body.removeChild(textArea);
       
       if (successful) {
-        showToast("SHARE LINK COPIED!");
+        const offlineNote = !navigator.onLine ? " (WORKS OFFLINE)" : "";
+        showToast(`SHARE LINK COPIED!${offlineNote}`);
       } else {
-        showToast("COPY FAILED - SHARE URL MANUALLY");
+        showToast("COPY FAILED - QR SAVED TO HISTORY");
       }
     } catch {
-      showToast("COPY FAILED - SHARE URL MANUALLY");
+      showToast("COPY FAILED - QR SAVED TO HISTORY");
     }
   };
 
@@ -266,14 +282,14 @@ export function QRGenerator() {
   useKeyboardShortcuts(shortcuts);
 
   return (
-    <div className="crt min-h-screen p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="crt min-h-screen p-6 flex flex-col">
+      <div className="max-w-7xl mx-auto flex-1 w-full">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold glow mb-2">
             QRETRO<span className="cursor">█</span>
           </h1>
-          <p className="text-muted">RETRO QR CODE GENERATOR v1.0</p>
+          <p className="text-muted">RETRO QR CODE GENERATOR</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -351,7 +367,7 @@ export function QRGenerator() {
                       <option value="H">H - High (~30% recovery)</option>
                     </select>
                     <div className="text-xs text-muted mt-1">
-                      Higher levels allow recovery from more damage
+                      Higher levels allow recovery from more damage but create larger QR codes
                     </div>
                   </div>
                 </div>
@@ -426,29 +442,54 @@ export function QRGenerator() {
             <HistoryPanel onLoadItem={handleLoadHistoryItem} />
           </div>
         </div>
+      </div>
 
-        {/* Footer */}
-        <div className="text-center mt-8 text-muted space-y-2">
-          <p>
-            QRetro - MIT License - Made with 💚 by claude-code
+      {/* Footer - Outside flex-1 container */}
+      <footer className="mt-12 max-w-7xl mx-auto w-full">
+        {/* Cache Info - Collapsed by default */}
+        <div className="text-center mb-4 relative">
+          <details className="group">
+            <summary className="text-xs text-muted/70 hover:text-muted cursor-pointer list-none">
+              <span className="group-open:hidden">▸ Cache Info</span>
+              <span className="hidden group-open:inline">▴ Cache Info</span>
+            </summary>
+            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-background border border-muted/20 rounded px-3 py-2 shadow-lg z-10 hidden group-open:block">
+              <CacheStatus />
+            </div>
+          </details>
+        </div>
+
+        {/* Features */}
+        <div className="text-center text-muted/80 mb-2">
+          <p className="text-xs">
+            📱 Works offline • 💾 Local storage • 🔒 Privacy-first
+          </p>
+        </div>
+
+        {/* Primary Attribution */}
+        <div className="text-center text-muted">
+          <p className="text-sm">
+            Press Ctrl+H for shortcuts • Made with 💚 by claude-code
             {" • "}
             <a 
               href="https://github.com/slopsauce/QRetro" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-accent hover:text-foreground transition-colors underline"
+              className="text-current hover:text-yellow-400 transition-colors inline-flex items-center"
+              title="View on GitHub"
             >
-              [GitHub]
+              <svg 
+                className="w-3 h-3" 
+                fill="currentColor" 
+                viewBox="0 0 24 24"
+                aria-label="GitHub"
+              >
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
             </a>
           </p>
-          <button
-            onClick={toggleHelp}
-            className="text-accent hover:text-foreground transition-colors text-sm"
-          >
-            [Ctrl+H] Show Keyboard Shortcuts
-          </button>
         </div>
-      </div>
+      </footer>
 
       {/* Keyboard Shortcuts Help Overlay */}
       <ShortcutsHelp 

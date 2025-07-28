@@ -1,7 +1,7 @@
 {
   "name": "QRetro - Retro QR Code Generator",
   "short_name": "QRetro",
-  "description": "Generate QR codes with a nostalgic terminal aesthetic",
+  "description": "Generate QR codes with a nostalgic terminal aesthetic - Works offline!",
   "start_url": "/QRetro/",
   "display": "standalone",
   "background_color": "#000000",
@@ -9,6 +9,8 @@
   "orientation": "portrait-primary",
   "categories": ["utilities", "productivity"],
   "lang": "en-US",
+  "prefer_related_applications": false,
+  "display_override": ["window-controls-overlay"],
   "icons": [
     {
       "src": "/QRetro/icon-192.png",

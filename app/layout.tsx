@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/providers";
 import { ThemeColor } from "@/components/theme-color";
+import { ServiceWorkerRegister } from "@/components/service-worker-register";
+import { OfflineIndicator } from "@/components/offline-indicator";
 import "./globals.css";
 
 // Dark mode terminal font
@@ -56,6 +58,8 @@ export default function RootLayout({
           themes={["light", "dark"]}
         >
           <ThemeColor />
+          <ServiceWorkerRegister />
+          <OfflineIndicator />
           {children}
         </ThemeProvider>
       </body>

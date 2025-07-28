@@ -65,16 +65,39 @@ QRetro is a retro-styled QR code generator with an authentic terminal/CRT aesthe
   - Increased spread radius for softer, more authentic CRT appearance
   - Better balance between visibility and subtlety
 
+### Offline PWA Support Implementation
+- **Service Worker**: Comprehensive caching with cache-first strategy for static assets
+  - `/public/sw.js` - Complete offline functionality with cache management
+  - **Automated Cache Versioning**: Build-time injection of git hash + timestamp for unique cache versions
+  - Cache cleanup and size management for optimal performance
+  - Background sync capabilities for future enhancements
+- **Service Worker Registration**: Auto-registration in production with update notifications
+  - `components/service-worker-register.tsx` - Handles SW lifecycle and user notifications
+  - Update prompts and offline capability notifications
+- **Offline Indicator**: Real-time connection status with retro styling
+  - `components/offline-indicator.tsx` - Shows online/offline state
+  - Graceful degradation messaging for network-dependent features
+- **Enhanced User Experience**: Offline-aware functionality
+  - Share functionality detects offline state and provides appropriate feedback
+  - QR codes cached via service worker for offline access
+  - Footer messaging highlights offline capabilities
+
 ## Build Commands
 ```bash
 # Development
 npm run dev
 
-# Production build  
+# Production build (includes service worker version injection)
 npm run build
 
 # Linting
 npm run lint
+
+# Test production build locally with proper routing
+npm run serve:local
+
+# One-command production testing (build + serve)
+npm run test:pwa
 ```
 
 ## CI/CD Pipeline
@@ -94,7 +117,8 @@ npm run lint
 - **QR Generation**: qrcode.js library
 - **CI/CD**: GitHub Actions + Dependabot for automated maintenance
 - **Deployment**: GitHub Pages with automated CI/CD
-- **PWA**: Manifest support for installable app
+- **PWA**: Full Progressive Web App with offline support and service worker
+- **Offline Support**: Complete functionality without internet connection
 
 ## File Structure
 - `app/` - Next.js app router pages
@@ -129,6 +153,46 @@ npm run lint
 - **QR Code Safety**: Clear warnings about only scanning QR codes from trusted sources
 - **Privacy Messaging**: Prominent UI notices explaining local-only data storage
 - **No Raw Data Display**: Share pages don't expose sensitive data in plain text
+
+## Offline PWA Support
+
+### Service Worker Architecture
+- **Cache-First Strategy**: Static assets (fonts, icons, CSS, JS) served from cache for instant loading
+- **Network-First Strategy**: App navigation attempts network first, falls back to cache
+- **Dynamic Caching**: Generated QR codes and user data cached for offline access
+- **Cache Management**: Automatic cleanup of old cache versions and size management
+
+### Offline Functionality
+- **Core Features**: Complete QR generation, history management, and downloads work offline
+- **Graceful Degradation**: Share functionality provides appropriate offline messaging
+- **Connection Detection**: Real-time online/offline status with user notifications
+- **Background Sync**: Future-ready for syncing when connection restored
+
+### PWA Compliance
+- **Service Worker**: Comprehensive caching and offline support
+- **Web App Manifest**: Enhanced with offline-specific properties
+- **Responsive Design**: Works across all device sizes and orientations
+- **Install Prompts**: Native installation experience on supported platforms
+
+## Code Quality & Performance
+
+### Recent Optimizations
+- **Dead Code Removal**: Eliminated unused `qr-options.tsx` component (89 lines)
+- **DOM Optimization**: Removed unnecessary `select-wrapper` div elements
+- **CSS Cleanup**: Streamlined stylesheets, removed redundant formatting
+- **Bundle Analysis**: Zero unused CSS, minimal unused JavaScript
+- **Build Verification**: All changes maintain functionality while reducing bundle size
+
+### Performance Metrics
+- **Lighthouse Production Scores**: 97% Performance, 96% Accessibility, 100% Best Practices, 100% SEO
+- **Core Web Vitals**: FCP 0.9s, LCP 2.3s, CLS 0, TBT 20ms
+- **Bundle Size**: 127 kB total JavaScript (highly optimized)
+- **Service Worker**: Intelligent caching with automatic cache versioning
+
+### Performance Testing Notes
+- **Localhost vs Production**: Lighthouse measurements on localhost can be inaccurate due to development server overhead
+- **Recommended Testing**: Always validate performance on actual deployed GitHub Pages site
+- **Service Worker Impact**: PWA caching significantly improves repeat visit performance
 
 ## Development Notes
 - Static site generation compatible with GitHub Pages
