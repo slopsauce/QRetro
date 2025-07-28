@@ -8,12 +8,13 @@ function generateBuildVersion() {
   try {
     // Try to get git commit hash
     const gitHash = execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim();
-    const timestamp = new Date().getTime();
+    const timestamp = Math.floor(new Date().getTime() / 1000).toString(36);
     return `${gitHash}-${timestamp}`;
   } catch (error) {
     // Fallback to timestamp if git is not available
     console.warn('Git not available, using timestamp for build version');
-    return `build-${new Date().getTime()}`;
+    const timestamp = Math.floor(new Date().getTime() / 1000).toString(36);
+    return `build-${timestamp}`;
   }
 }
 

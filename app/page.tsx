@@ -1,5 +1,5 @@
 import { QRGenerator } from "@/components/qr-generator";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { AppControls } from "@/components/app-controls";
 import { ErrorBoundary } from "@/components/error-boundary";
 
 // Ensure this page is statically exported
@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <ErrorBoundary>
       <main>
-        <ThemeToggle />
+        <AppControls />
         <QRGenerator />
       </main>
     </ErrorBoundary>

@@ -130,10 +130,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    transparent 50%,
-    rgba(0, 0, 0, 0.15) 50%
-  );
+  background: linear-gradient(transparent 50%, rgba(0, 0, 0, 0.15) 50%);
   background-size: 100% 3px;
   pointer-events: none;
   z-index: 10;
@@ -143,4 +140,3 @@ body {
   display: block;
   border-radius: 2px;
 }
-

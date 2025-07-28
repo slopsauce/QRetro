@@ -13,9 +13,10 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build && node scripts/inject-build-version.js",
-    "build:base": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "serve:local": "node serve-local.js",
+    "test:pwa": "npm run build && npm run serve:local"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -35,6 +36,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.4",
+    "express": "^5.1.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

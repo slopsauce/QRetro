@@ -72,14 +72,14 @@ export function HistoryPanel({ onLoadItem }: HistoryPanelProps) {
 
   return (
     <div className="space-y-4">
-      <RetroFrame title={`HISTORY (${count})`}>
+      <RetroFrame title="HISTORY">
         <div>
           {/* Collapse/Expand Toggle */}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="w-full text-left p-2 hover:bg-surface transition-colors"
           >
-            <span className="text-accent">
+            <span className="text-foreground">
               {isExpanded ? "[▼]" : "[▶]"}
             </span>
             <span className="ml-2">
@@ -159,8 +159,7 @@ export function HistoryPanel({ onLoadItem }: HistoryPanelProps) {
           {/* Privacy Notice - shown at bottom inside the frame when user has few items */}
           {count <= 3 && (
             <div className="p-2 text-xs text-muted opacity-75">
-              <div className="flex items-center gap-1">
-                <span className="text-accent">[🔒]</span>
+              <div>
                 <span>PRIVACY: All history stored locally on your device only</span>
               </div>
             </div>

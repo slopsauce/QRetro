@@ -7,6 +7,7 @@ interface CacheStatus {
   isReady: boolean;
   estimatedSize: number;
   lastUpdated: Date | null;
+  version: string | null;
 }
 
 export function CacheStatus() {
@@ -14,9 +15,9 @@ export function CacheStatus() {
     isSupported: false,
     isReady: false,
     estimatedSize: 0,
-    lastUpdated: null
+    lastUpdated: null,
+    version: null
   });
-
   useEffect(() => {
     checkCacheStatus();
     
@@ -28,6 +29,10 @@ export function CacheStatus() {
         }
       });
     }
+
+    return () => {
+      // Cleanup if needed
+    };
   }, []);
 
   const checkCacheStatus = async () => {
@@ -39,6 +44,16 @@ export function CacheStatus() {
 
       const cacheNames = await caches.keys();
       const qretroCaches = cacheNames.filter(name => name.startsWith('qretro-'));
+      
+      // Extract version from cache name (e.g., "qretro-static-v2307642-t045if" -> "2307642-t045if")
+      let version = null;
+      if (qretroCaches.length > 0) {
+        const cacheName = qretroCaches[0];
+        const versionMatch = cacheName.match(/qretro-(?:static|dynamic)-v(.+)/);
+        if (versionMatch) {
+          version = versionMatch[1];
+        }
+      }
       
       let totalSize = 0;
       let hasContent = false;
@@ -97,7 +112,8 @@ export function CacheStatus() {
         isSupported: true,
         isReady: hasContent,
         estimatedSize: totalSize,
-        lastUpdated: hasContent ? new Date() : null
+        lastUpdated: hasContent ? new Date() : null,
+        version: version
       });
     } catch (error) {
       console.warn('[Cache Status] Failed to check cache:', error);
@@ -121,27 +137,27 @@ export function CacheStatus() {
   }
 
   return (
-    <div className="text-xs text-muted border-t border-muted pt-2 mt-2">
-      <div className="flex items-center justify-between">
-        <span className="flex items-center gap-1">
-          <span className={cacheStatus.isReady ? "text-secondary" : "text-muted"}>
-            {cacheStatus.isReady ? "●" : "○"}
-          </span>
-          <span>Cache Status</span>
-        </span>
+    <div className="text-xs text-muted">
+      <div className="flex justify-between">
+        <span>Cache</span>
         <span>{cacheStatus.isReady ? "Ready" : "Loading..."}</span>
       </div>
       
       {cacheStatus.isReady && (
         <div className="mt-1 space-y-1">
           <div className="flex justify-between">
-            <span>Size:</span>
+            <span>Size</span>
             <span>{formatSize(cacheStatus.estimatedSize)}</span>
           </div>
           <div className="flex justify-between">
-            <span>Updated:</span>
+            <span>Updated</span>
             <span>{formatDate(cacheStatus.lastUpdated)}</span>
           </div>
+          {cacheStatus.version && (
+            <div className="text-right">
+              <span className="font-mono text-xs">{cacheStatus.version}</span>
+            </div>
+          )}
         </div>
       )}
     </div>
