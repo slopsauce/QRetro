@@ -161,6 +161,12 @@ self.addEventListener('fetch', (event) => {
     return;
   }
   
+  // Special handling for share URLs with fragments (Safari fix)
+  if (url.pathname.includes('/share') && (url.hash || url.search)) {
+    // Let browser handle share URLs naturally to preserve fragments
+    return;
+  }
+  
   // Handle different types of requests
   if (isStaticAsset(url)) {
     // Static assets: Cache-first
