@@ -10,4 +10,4 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
-    # Trigger Dependabot activation
+    # Trigger Dependabot activation - update 2
