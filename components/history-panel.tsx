@@ -73,13 +73,17 @@ export function HistoryPanel({ onLoadItem }: HistoryPanelProps) {
   return (
     <div className="space-y-4">
       <RetroFrame title="HISTORY">
-        <div>
+        <div role="region" aria-labelledby="history-heading">
+          <h3 id="history-heading" className="sr-only">QR Code History</h3>
           {/* Collapse/Expand Toggle */}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
+            aria-expanded={isExpanded}
+            aria-controls="history-items"
+            aria-label={`${isExpanded ? "Hide" : "Show"} saved QR codes, ${count} items total`}
             className="w-full text-left p-2 hover:bg-surface transition-colors"
           >
-            <span className="text-foreground">
+            <span className="text-foreground" aria-hidden="true">
               {isExpanded ? "[▼]" : "[▶]"}
             </span>
             <span className="ml-2">
@@ -89,14 +93,24 @@ export function HistoryPanel({ onLoadItem }: HistoryPanelProps) {
 
           {/* History Items */}
           {isExpanded && (
-            <div className="space-y-1 mt-2">
+            <div id="history-items" className="space-y-1 mt-2">
               {displayItems.map((item) => (
                 <div
                   key={item.id}
                   onClick={() => handleLoadItem(item)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleLoadItem(item);
+                    }
+                  }}
+                  aria-label={`Load ${getTypeLabel(item.type)} QR code from ${formatDate(item.timestamp)}: ${item.preview || "No preview available"}`}
                   className={cn(
                     "group flex items-center justify-between p-2 border border-transparent",
-                    "hover:border-current hover:bg-surface cursor-pointer transition-colors"
+                    "hover:border-current hover:bg-surface cursor-pointer transition-colors",
+                    "focus:outline-none focus:border-accent focus:bg-surface"
                   )}
                 >
                   <div className="flex-1 min-w-0">
@@ -116,12 +130,12 @@ export function HistoryPanel({ onLoadItem }: HistoryPanelProps) {
                   {/* Delete Button */}
                   <button
                     onClick={(e) => handleRemoveItem(item.id, e)}
+                    aria-label={`Remove ${getTypeLabel(item.type)} QR code from ${formatDate(item.timestamp)} from history`}
                     className={cn(
                       "ml-2 px-2 py-1 text-xs opacity-0 group-hover:opacity-100",
                       "border border-current hover:bg-foreground hover:text-background",
-                      "transition-all duration-200"
+                      "transition-all duration-200 focus:opacity-100 focus:outline-none focus:ring-1 focus:ring-accent"
                     )}
-                    title="Remove from history"
                   >
                     [×]
                   </button>
@@ -132,7 +146,8 @@ export function HistoryPanel({ onLoadItem }: HistoryPanelProps) {
               {hasMore && (
                 <button
                   onClick={() => setShowAll(!showAll)}
-                  className="w-full p-2 text-center text-accent border border-current hover:bg-surface transition-colors"
+                  aria-label={showAll ? `Show only first 3 items` : `Show all ${count} saved QR codes`}
+                  className="w-full p-2 text-center text-accent border border-current hover:bg-surface transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
                 >
                   {showAll ? `[SHOW LESS]` : `[SHOW ALL (${count})]`}
                 </button>
@@ -142,13 +157,15 @@ export function HistoryPanel({ onLoadItem }: HistoryPanelProps) {
               <div className="flex gap-2 pt-2">
                 <button
                   onClick={clearHistory}
-                  className="px-3 py-1 text-sm border border-current hover:bg-foreground hover:text-background transition-colors"
+                  aria-label={`Clear all ${count} saved QR codes from history`}
+                  className="px-3 py-1 text-sm border border-current hover:bg-foreground hover:text-background transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
                 >
                   [CLEAR ALL]
                 </button>
                 <button
                   onClick={exportHistory}
-                  className="px-3 py-1 text-sm border border-current hover:bg-foreground hover:text-background transition-colors"
+                  aria-label="Export QR code history as JSON file"
+                  className="px-3 py-1 text-sm border border-current hover:bg-foreground hover:text-background transition-colors focus:outline-none focus:ring-1 focus:ring-accent"
                 >
                   [EXPORT]
                 </button>
