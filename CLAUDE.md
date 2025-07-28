@@ -90,13 +90,16 @@ npm run dev
 # Production build (includes service worker version injection)
 npm run build
 
+# Start production server
+npm start
+
 # Linting
 npm run lint
 
 # Test production build locally with proper routing
 npm run serve:local
 
-# One-command production testing (build + serve)
+# One-command production testing (build + serve)  
 npm run test:pwa
 ```
 
@@ -183,16 +186,6 @@ npm run test:pwa
 - **Bundle Analysis**: Zero unused CSS, minimal unused JavaScript
 - **Build Verification**: All changes maintain functionality while reducing bundle size
 
-### Performance Metrics
-- **Lighthouse Production Scores**: 97% Performance, 96% Accessibility, 100% Best Practices, 100% SEO
-- **Core Web Vitals**: FCP 0.9s, LCP 2.3s, CLS 0, TBT 20ms
-- **Bundle Size**: 127 kB total JavaScript (highly optimized)
-- **Service Worker**: Intelligent caching with automatic cache versioning
-
-### Performance Testing Notes
-- **Localhost vs Production**: Lighthouse measurements on localhost can be inaccurate due to development server overhead
-- **Recommended Testing**: Always validate performance on actual deployed GitHub Pages site
-- **Service Worker Impact**: PWA caching significantly improves repeat visit performance
 
 ## Development Notes
 - Static site generation compatible with GitHub Pages

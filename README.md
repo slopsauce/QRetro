@@ -125,6 +125,12 @@ npm start
 
 # Run linting
 npm run lint
+
+# Test production build locally with proper routing
+npm run serve:local
+
+# One-command production testing (build + serve)
+npm run test:pwa
 ```
 
 ## Deployment
@@ -136,19 +142,6 @@ This project is automatically deployed to GitHub Pages on every push to the main
 - **CI/CD**: GitHub Actions runs build and lint checks on all pull requests
 - **Dependencies**: Dependabot automatically updates npm packages weekly
 - **Quality**: All changes must pass CI before merging
-
-## Performance
-
-QRetro delivers excellent performance with modern web standards:
-
-- **📊 Lighthouse Score**: 97/100 Performance, 96/100 Accessibility, 100/100 Best Practices, 100/100 SEO
-- **⚡ Core Web Vitals**: 
-  - **FCP**: 0.9s (Excellent)
-  - **LCP**: 2.3s (Good - under 2.5s threshold)
-  - **CLS**: 0 (Perfect - no layout shifts)
-  - **TBT**: 20ms (Excellent)
-- **🗜️ Bundle Size**: 127 kB total JavaScript (optimized with tree-shaking)
-- **🧹 Code Quality**: Zero unused CSS, minimal unused JavaScript, clean architecture
 
 ## Tech Stack
 
