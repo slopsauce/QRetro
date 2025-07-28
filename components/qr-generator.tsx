@@ -307,14 +307,14 @@ export function QRGenerator() {
         )}
       </div>
 
-      <div className="max-w-7xl mx-auto flex-1 w-full">
+      <main className="max-w-7xl mx-auto flex-1 w-full">
         {/* Header */}
-        <div className="text-center mb-8">
+        <header className="text-center mb-8">
           <h1 className="text-4xl font-bold glow mb-2">
             QRETRO<span className="cursor">█</span>
           </h1>
           <p className="text-muted">RETRO QR CODE GENERATOR</p>
-        </div>
+        </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Input Panel */}
@@ -505,7 +505,7 @@ export function QRGenerator() {
             <HistoryPanel onLoadItem={handleLoadHistoryItem} />
           </div>
         </div>
-      </div>
+      </main>
 
       {/* Footer - Outside flex-1 container */}
       <footer className="mt-12 max-w-7xl mx-auto w-full">
