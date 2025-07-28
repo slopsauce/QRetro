@@ -8,10 +8,8 @@ export const dynamic = 'error';
 export default function Home() {
   return (
     <ErrorBoundary>
-      <main>
-        <AppControls />
-        <QRGenerator />
-      </main>
+      <AppControls />
+      <QRGenerator />
     </ErrorBoundary>
   );
 }
