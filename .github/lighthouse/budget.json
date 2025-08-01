@@ -16,17 +16,17 @@
       },
       {
         "resourceType": "font",
-        "budget": 100
+        "budget": 170
       },
       {
         "resourceType": "total",
-        "budget": 300
+        "budget": 350
       }
     ],
     "resourceCounts": [
       {
         "resourceType": "script",
-        "budget": 10
+        "budget": 25
       },
       {
         "resourceType": "stylesheet",
@@ -34,7 +34,7 @@
       },
       {
         "resourceType": "font",
-        "budget": 3
+        "budget": 8
       }
     ]
   }
