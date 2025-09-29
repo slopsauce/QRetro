@@ -38,7 +38,7 @@
     "eslint": ">=9",
     "eslint-config-next": ">=15.5.2",
     "express": ">=5.1.0",
-    "puppeteer": "^24.22.0",
+    "puppeteer": "^24.22.3",
     "tailwindcss": ">=4",
     "typescript": ">=5"
   }
