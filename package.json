@@ -25,7 +25,7 @@
     "qrcode": ">=1.5.4",
     "react": ">=19.1.0",
     "react-dom": ">=19.2.0",
-    "tailwind-merge": ">=3.3.1"
+    "tailwind-merge": ">=3.4.0"
   },
   "devDependencies": {
     "@axe-core/puppeteer": "^4.11.0",
