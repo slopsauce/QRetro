@@ -28,7 +28,7 @@
     "tailwind-merge": ">=3.4.0"
   },
   "devDependencies": {
-    "@axe-core/puppeteer": "^4.11.0",
+    "@axe-core/puppeteer": "^4.11.1",
     "@eslint/eslintrc": ">=3",
     "@tailwindcss/postcss": ">=4",
     "@types/node": ">=24",
